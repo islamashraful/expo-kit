@@ -9,6 +9,7 @@ Built for Expo SDK 57. Not published to npm yet.
 | Package | What it does |
 |---|---|
 | `@islamashraful/core` | Shared helpers used by the other packages |
+| `@islamashraful/notifications` | Notification permission, scheduling and tap handling |
 
 ### `@islamashraful/core`
 
@@ -31,9 +32,41 @@ useOnForeground(() => {
 });
 ```
 
-### Planned
+### `@islamashraful/notifications`
 
-- `notifications`: notification permission and scheduling helpers (next up)
+Install in the app: `npx expo install expo-notifications`
+
+- `showNotificationsInApp()`: show notifications as banners even while the app is open. Call once at startup.
+- `useNotificationPermission()`: `{ granted, status, canAskAgain, request }`. Checks again when the app comes back to the front.
+- `useNotificationTap(onTap)`: runs when the user taps a notification, whether the app was open or closed.
+- `scheduleNotification({ title, body, data, at })`: returns the id, or `null` if it failed (the error goes to `reportError`).
+- `cancelNotifications(ids)`: cancels scheduled notifications.
+
+```tsx
+import {
+  scheduleNotification,
+  showNotificationsInApp,
+  useNotificationTap,
+} from '@islamashraful/notifications';
+
+showNotificationsInApp();
+
+// In a component
+useNotificationTap((response) => {
+  const { itemId } = response.notification.request.content.data;
+  router.push(`/items/${itemId}`);
+});
+
+const id = await scheduleNotification({
+  title: 'Netflix renews soon',
+  data: { itemId: '42' },
+  at: new Date('2026-11-01T10:00:00'),
+});
+```
+
+Local notifications work in Expo Go. Push notifications need a development build.
+
+### Planned
 - `app-update`: App Store and EAS Update checks with an update sheet
 - `rating`: App Store review prompt with limits
 - `mail`: mail composer wrapper

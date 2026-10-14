@@ -6,6 +6,11 @@ type PackageScreen = { name: string; description: string; href: Href };
 /** One row per package. Add a row here when a new package gets a test screen. */
 const PACKAGES: PackageScreen[] = [
   { name: '@islamashraful/core', description: 'useOnForeground, reportError', href: '/core' },
+  {
+    name: '@islamashraful/notifications',
+    description: 'Permission, schedule, tap handling',
+    href: '/notifications',
+  },
 ];
 
 export default function HomeScreen() {
