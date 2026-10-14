@@ -12,6 +12,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: 'expo-kit', headerLargeTitle: true }} />
         <Stack.Screen name="core" options={{ title: 'core' }} />
         <Stack.Screen name="notifications" options={{ title: 'notifications' }} />
+        <Stack.Screen name="app-update" options={{ title: 'app-update' }} />
       </Stack>
     </ThemeProvider>
   );

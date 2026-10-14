@@ -1,0 +1,52 @@
+{
+  "name": "@islamashraful/app-update",
+  "version": "0.0.1",
+  "description": "App Store and EAS Update checks with a native update sheet for Expo apps",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/app-update"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@islamashraful/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "@expo/ui": ">=57.0.0",
+    "expo-application": ">=57.0.0",
+    "expo-sqlite": ">=57.0.0",
+    "expo-updates": ">=57.0.0",
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@expo/ui": "~57.0.23",
+    "@types/react": "~19.2.2",
+    "expo-application": "~57.0.3",
+    "expo-sqlite": "~57.0.4",
+    "expo-updates": "~57.0.26",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

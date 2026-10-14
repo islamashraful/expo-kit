@@ -11,6 +11,11 @@ const PACKAGES: PackageScreen[] = [
     description: 'Permission, schedule, tap handling',
     href: '/notifications',
   },
+  {
+    name: '@islamashraful/app-update',
+    description: 'App Store / EAS Update check, native sheet',
+    href: '/app-update',
+  },
 ];
 
 export default function HomeScreen() {

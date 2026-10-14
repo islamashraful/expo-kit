@@ -16,6 +16,11 @@
       "react-native": "./src/index.ts",
       "default": "./build/index.js"
     },
+    "./storage": {
+      "types": "./build/storage.d.ts",
+      "react-native": "./src/storage.ts",
+      "default": "./build/storage.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -28,11 +33,18 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
+    "expo-sqlite": ">=57.0.0",
     "react": "*",
     "react-native": "*"
   },
+  "peerDependenciesMeta": {
+    "expo-sqlite": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "expo-sqlite": "~57.0.4",
     "typescript": "~6.0.3"
   },
   "publishConfig": {
