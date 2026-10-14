@@ -54,7 +54,7 @@
     },
     "packages/analytics": {
       "name": "@expo-kit/analytics",
-      "version": "0.0.0",
+      "version": "0.1.0",
       "devDependencies": {
         "@types/react": "~19.2.2",
         "expo-application": "~57.0.3",
