@@ -1,0 +1,53 @@
+{
+  "name": "@expo-kit/analytics",
+  "version": "0.0.0",
+  "description": "PostHog analytics setup for Expo apps",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native",
+    "posthog"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/analytics"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "expo-application": ">=57.0.0",
+    "expo-router": ">=57.0.0",
+    "posthog-react-native": ">=4.39.0",
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "expo-application": "~57.0.3",
+    "expo-router": "~57.0.26",
+    "posthog-react-native": "^4.81.1",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

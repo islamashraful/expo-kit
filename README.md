@@ -13,6 +13,7 @@ Built for Expo SDK 57. Not made by or affiliated with Expo.
 | `@expo-kit/app-update` | App Store and EAS Update check with a native update sheet |
 | `@expo-kit/rating` | App Store review prompt with limits |
 | `@expo-kit/mail` | Contact email with device info |
+| `@expo-kit/analytics` | PostHog events and screen views |
 
 ### `@expo-kit/core`
 
@@ -138,6 +139,32 @@ import { sendEmail } from '@expo-kit/mail';
 
 const result = await sendEmail({ to: 'hello@example.com', subject: 'About Kite' });
 if (result === 'unavailable') showAddress('hello@example.com');
+```
+
+### `@expo-kit/analytics`
+
+Install in the app: `npx expo install posthog-react-native expo-application expo-device expo-file-system expo-localization`
+
+- `initAnalytics({ apiKey, host?, enableInDev?, options? })`: starts PostHog. Call once at startup. Off in development (unless `enableInDev: true`) and when `apiKey` is empty, so the other functions are always safe to call. `host` defaults to the EU server.
+- `useTrackScreens()`: records a screen view on every route change. Call once in the root layout.
+- `capture(event, properties?)`: sends an event. Every event also gets `app`, `app_version`, `environment` and `platform`.
+- `identify(userId, properties?)`: links the following events to a user (e.g. a device ID) and saves `first_app_version` once.
+- `resetAnalytics()`: forgets the user, e.g. after logging out.
+- `getPostHog()`: the PostHog client for anything else (e.g. feature flags), or `null` when off.
+
+```tsx
+import { capture, initAnalytics, useTrackScreens } from '@expo-kit/analytics';
+
+initAnalytics({
+  apiKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
+  host: process.env.EXPO_PUBLIC_POSTHOG_HOST, // falls back to EU when not set
+});
+
+// In the root layout
+useTrackScreens();
+
+// After something happens
+capture('task_saved', { count: 3 });
 ```
 
 ### Planned
