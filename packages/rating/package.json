@@ -1,6 +1,6 @@
 {
   "name": "@islamashraful/rating",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "App Store review prompt with sensible limits for Expo apps",
   "license": "MIT",
   "repository": {

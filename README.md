@@ -2,7 +2,7 @@
 
 Reusable packages for my Expo apps. Each feature is its own small package, so an app only installs what it needs.
 
-Built for Expo SDK 57. Not published to npm yet.
+Built for Expo SDK 57.
 
 ## Packages
 
@@ -163,6 +163,12 @@ bun run typecheck           # type checks every package and the playground
 ```
 
 The playground reads package source directly, so edits show up without rebuilding.
+
+## Releasing
+
+1. After changing a package, run `bun run changeset`. Pick the packages, the kind of change (patch = fix, minor = new feature, major = breaking) and write one line about it. Commit the file it creates.
+2. When ready to release, run `bun run version-packages`. It raises the version numbers and writes each package's `CHANGELOG.md`. Commit that.
+3. Run `bun run release` (needs `npm login` once). It publishes every package whose new version isn't on npm yet and tags it in git. Then `git push --tags`.
 
 ## Adding a package
 

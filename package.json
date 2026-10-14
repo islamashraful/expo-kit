@@ -9,6 +9,12 @@
     "build": "bun run --filter '@islamashraful/*' build",
     "typecheck": "bun run --filter '*' typecheck",
     "playground": "bun run --cwd apps/playground start",
-    "postinstall": "bun run build"
+    "postinstall": "bun run build",
+    "changeset": "changeset",
+    "version-packages": "changeset version && bun install",
+    "release": "bun scripts/release.ts"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@islamashraful/app-update",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "App Store and EAS Update checks with a native update sheet for Expo apps",
   "license": "MIT",
   "repository": {
