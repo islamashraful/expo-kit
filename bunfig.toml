@@ -1,0 +1,3 @@
+[install]
+# Expo/Metro works most reliably with a flat node_modules
+linker = "hoisted"

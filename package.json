@@ -1,0 +1,14 @@
+{
+  "name": "expo-kit",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "bun run --filter '@islamashraful/*' build",
+    "typecheck": "bun run --filter '*' typecheck",
+    "playground": "bun run --cwd apps/playground start",
+    "postinstall": "bun run build"
+  }
+}
