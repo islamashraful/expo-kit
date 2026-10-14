@@ -6,7 +6,7 @@ import {
   resetReviewState,
   setReviewLimits,
   type ReviewState,
-} from '@islamashraful/rating';
+} from '@expo-kit/rating';
 import { useCallback, useEffect, useState } from 'react';
 
 // No waiting days, so the popup can be tested right away. Real apps use the defaults.

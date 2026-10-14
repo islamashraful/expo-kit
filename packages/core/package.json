@@ -1,7 +1,12 @@
 {
-  "name": "@islamashraful/core",
+  "name": "@expo-kit/core",
   "version": "0.1.0",
   "description": "Shared hooks for Expo apps",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",

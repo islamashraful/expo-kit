@@ -5,19 +5,19 @@ type PackageScreen = { name: string; description: string; href: Href };
 
 /** One row per package. Add a row here when a new package gets a test screen. */
 const PACKAGES: PackageScreen[] = [
-  { name: '@islamashraful/core', description: 'useOnForeground, reportError', href: '/core' },
+  { name: '@expo-kit/core', description: 'useOnForeground, reportError', href: '/core' },
   {
-    name: '@islamashraful/notifications',
+    name: '@expo-kit/notifications',
     description: 'Permission, schedule, tap handling',
     href: '/notifications',
   },
   {
-    name: '@islamashraful/app-update',
+    name: '@expo-kit/app-update',
     description: 'App Store / EAS Update check, native sheet',
     href: '/app-update',
   },
-  { name: '@islamashraful/rating', description: 'Review prompt with limits', href: '/rating' },
-  { name: '@islamashraful/mail', description: 'Contact email with device info', href: '/mail' },
+  { name: '@expo-kit/rating', description: 'Review prompt with limits', href: '/rating' },
+  { name: '@expo-kit/mail', description: 'Contact email with device info', href: '/mail' },
 ];
 
 export default function HomeScreen() {

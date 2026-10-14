@@ -1,5 +1,5 @@
 import { Host, List, ListItem, Text } from '@expo/ui';
-import { reportError, setErrorReporter, useOnForeground } from '@islamashraful/core';
+import { reportError, setErrorReporter, useOnForeground } from '@expo-kit/core';
 import { useEffect, useState } from 'react';
 
 export default function CoreScreen() {

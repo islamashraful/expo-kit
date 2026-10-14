@@ -1,7 +1,12 @@
 {
-  "name": "@islamashraful/notifications",
+  "name": "@expo-kit/notifications",
   "version": "0.1.0",
   "description": "Notification permission, tap handling and scheduling helpers for Expo apps",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,7 +33,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@islamashraful/core": "workspace:^"
+    "@expo-kit/core": "workspace:^"
   },
   "peerDependencies": {
     "react": "*",

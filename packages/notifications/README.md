@@ -1,11 +1,11 @@
-# @islamashraful/notifications
+# @expo-kit/notifications
 
-Notification permission, scheduling and tap handling. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57.
+Notification permission, scheduling and tap handling. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 
 ```sh
-npx expo install @islamashraful/notifications expo-notifications
+npx expo install @expo-kit/notifications expo-notifications
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ import {
   scheduleNotification,
   showNotificationsInApp,
   useNotificationTap,
-} from '@islamashraful/notifications';
+} from '@expo-kit/notifications';
 
 showNotificationsInApp();
 

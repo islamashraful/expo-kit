@@ -1,7 +1,12 @@
 {
-  "name": "@islamashraful/app-update",
+  "name": "@expo-kit/app-update",
   "version": "0.1.0",
   "description": "App Store and EAS Update checks with a native update sheet for Expo apps",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,7 +33,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@islamashraful/core": "workspace:^"
+    "@expo-kit/core": "workspace:^"
   },
   "peerDependencies": {
     "@expo/ui": ">=57.0.0",

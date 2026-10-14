@@ -1,4 +1,4 @@
-# @islamashraful/core
+# @expo-kit/core
 
 ## 0.1.0
 

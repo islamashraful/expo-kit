@@ -1,5 +1,5 @@
 import { Host, List, ListItem, Text } from '@expo/ui';
-import { getDeviceInfo, sendEmail } from '@islamashraful/mail';
+import { getDeviceInfo, sendEmail } from '@expo-kit/mail';
 import { useState } from 'react';
 
 const TEST_ADDRESS = 'hello@example.com';

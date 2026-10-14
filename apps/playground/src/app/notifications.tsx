@@ -4,7 +4,7 @@ import {
   scheduleNotification,
   useNotificationPermission,
   useNotificationTap,
-} from '@islamashraful/notifications';
+} from '@expo-kit/notifications';
 import { useState } from 'react';
 import { Linking } from 'react-native';
 

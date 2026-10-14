@@ -1,4 +1,4 @@
-import { reportError } from '@islamashraful/core';
+import { reportError } from '@expo-kit/core';
 import * as Notifications from 'expo-notifications';
 
 export type ScheduleNotificationInput = {

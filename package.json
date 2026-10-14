@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "bun run --filter '@islamashraful/*' build",
+    "build": "bun run --filter '@expo-kit/*' build",
     "typecheck": "bun run --filter '*' typecheck",
     "playground": "bun run --cwd apps/playground start",
     "postinstall": "bun run build",

@@ -1,4 +1,4 @@
-import { reportError } from '@islamashraful/core';
+import { reportError } from '@expo-kit/core';
 import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 import * as MailComposer from 'expo-mail-composer';

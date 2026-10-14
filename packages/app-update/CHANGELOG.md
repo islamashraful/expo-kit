@@ -1,4 +1,4 @@
-# @islamashraful/app-update
+# @expo-kit/app-update
 
 ## 0.1.0
 
@@ -9,4 +9,4 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @islamashraful/core@0.1.0
+  - @expo-kit/core@0.1.0

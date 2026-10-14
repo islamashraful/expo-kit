@@ -1,11 +1,11 @@
-# @islamashraful/rating
+# @expo-kit/rating
 
-App Store review prompt with limits. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57.
+App Store review prompt with limits. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 
 ```sh
-npx expo install @islamashraful/rating expo-store-review expo-application expo-sqlite
+npx expo install @expo-kit/rating expo-store-review expo-application expo-sqlite
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npx expo install @islamashraful/rating expo-store-review expo-application expo-s
 - `openReviewPage({ appStoreId })`: opens the App Store app on the "Write a review" page, with no limits. For a "Rate us" button in Settings. `appStoreId` is the number in the app's App Store link. Opens the store of the user's own country. On Android it opens the Play Store with the bundle ID.
 
 ```tsx
-import { openReviewPage, requestReviewIfReady, setReviewLimits } from '@islamashraful/rating';
+import { openReviewPage, requestReviewIfReady, setReviewLimits } from '@expo-kit/rating';
 
 // Optional, once at startup. Only for apps that want other limits.
 setReviewLimits({ minEvents: 10, minDays: 7 });

@@ -1,6 +1,6 @@
 import { Host, List, ListItem, Text } from '@expo/ui';
-import { AppUpdateSheet, useAppUpdate, type AppUpdate } from '@islamashraful/app-update';
-import { kitStorage } from '@islamashraful/core/storage';
+import { AppUpdateSheet, useAppUpdate, type AppUpdate } from '@expo-kit/app-update';
+import { kitStorage } from '@expo-kit/core/storage';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 

@@ -1,11 +1,11 @@
-# @islamashraful/app-update
+# @expo-kit/app-update
 
-App Store and EAS Update check with a native update sheet. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57.
+App Store and EAS Update check with a native update sheet. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 
 ```sh
-npx expo install @islamashraful/app-update @expo/ui expo-application expo-updates expo-sqlite
+npx expo install @expo-kit/app-update @expo/ui expo-application expo-updates expo-sqlite
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npx expo install @islamashraful/app-update @expo/ui expo-application expo-update
 - `<AppUpdateSheet update={...} appName="..." />`: native iOS/Android bottom sheet. Every text can be changed with `labels`.
 
 ```tsx
-import { AppUpdateSheet, useAppUpdate } from '@islamashraful/app-update';
+import { AppUpdateSheet, useAppUpdate } from '@expo-kit/app-update';
 
 const update = useAppUpdate({ enabled: appReady });
 

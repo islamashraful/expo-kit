@@ -1,5 +1,5 @@
-import { reportError } from '@islamashraful/core';
-import { kitStorage } from '@islamashraful/core/storage';
+import { reportError } from '@expo-kit/core';
+import { kitStorage } from '@expo-kit/core/storage';
 import * as Application from 'expo-application';
 import * as StoreReview from 'expo-store-review';
 import { Linking, Platform } from 'react-native';

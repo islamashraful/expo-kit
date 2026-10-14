@@ -1,4 +1,4 @@
-import { showNotificationsInApp } from '@islamashraful/notifications';
+import { showNotificationsInApp } from '@expo-kit/notifications';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
 

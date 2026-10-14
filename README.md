@@ -2,29 +2,29 @@
 
 Reusable packages for my Expo apps. Each feature is its own small package, so an app only installs what it needs.
 
-Built for Expo SDK 57.
+Built for Expo SDK 57. Not made by or affiliated with Expo.
 
 ## Packages
 
 | Package | What it does |
 |---|---|
-| `@islamashraful/core` | Shared helpers used by the other packages |
-| `@islamashraful/notifications` | Notification permission, scheduling and tap handling |
-| `@islamashraful/app-update` | App Store and EAS Update check with a native update sheet |
-| `@islamashraful/rating` | App Store review prompt with limits |
-| `@islamashraful/mail` | Contact email with device info |
+| `@expo-kit/core` | Shared helpers used by the other packages |
+| `@expo-kit/notifications` | Notification permission, scheduling and tap handling |
+| `@expo-kit/app-update` | App Store and EAS Update check with a native update sheet |
+| `@expo-kit/rating` | App Store review prompt with limits |
+| `@expo-kit/mail` | Contact email with device info |
 
-### `@islamashraful/core`
+### `@expo-kit/core`
 
 The main import uses only React Native, no extra native libraries.
 
 - `useOnForeground(callback)`: runs `callback` every time the app comes back to the front.
 - `setErrorReporter(fn)`: the app tells the kit where to send errors (e.g. Sentry). Call once at startup.
 - `reportError(error, context?)`: used by kit packages to send an error to that place. In development it's also logged to the console.
-- `kitStorage` from `@islamashraful/core/storage`: small saved values for kit packages (e.g. when "Later" was tapped). Needs `expo-sqlite` in the app. Uses its own database file, so it never touches the app's data.
+- `kitStorage` from `@expo-kit/core/storage`: small saved values for kit packages (e.g. when "Later" was tapped). Needs `expo-sqlite` in the app. Uses its own database file, so it never touches the app's data.
 
 ```tsx
-import { setErrorReporter, useOnForeground } from '@islamashraful/core';
+import { setErrorReporter, useOnForeground } from '@expo-kit/core';
 import * as Sentry from '@sentry/react-native';
 
 // Once at app startup. Sentry itself is still set up by the app.
@@ -36,7 +36,7 @@ useOnForeground(() => {
 });
 ```
 
-### `@islamashraful/notifications`
+### `@expo-kit/notifications`
 
 Install in the app: `npx expo install expo-notifications`
 
@@ -51,7 +51,7 @@ import {
   scheduleNotification,
   showNotificationsInApp,
   useNotificationTap,
-} from '@islamashraful/notifications';
+} from '@expo-kit/notifications';
 
 showNotificationsInApp();
 
@@ -70,7 +70,7 @@ const id = await scheduleNotification({
 
 Local notifications work in Expo Go. Push notifications need a development build.
 
-### `@islamashraful/app-update`
+### `@expo-kit/app-update`
 
 Install in the app: `npx expo install @expo/ui expo-application expo-updates expo-sqlite`
 
@@ -81,7 +81,7 @@ Install in the app: `npx expo install @expo/ui expo-application expo-updates exp
 - `<AppUpdateSheet update={...} appName="..." />`: native iOS/Android bottom sheet. Every text can be changed with `labels`.
 
 ```tsx
-import { AppUpdateSheet, useAppUpdate } from '@islamashraful/app-update';
+import { AppUpdateSheet, useAppUpdate } from '@expo-kit/app-update';
 
 const update = useAppUpdate({ enabled: appReady });
 
@@ -95,7 +95,7 @@ return (
 
 The bundle ID, installed version and App Store link come from the app itself, so there's nothing to configure. The App Store check is iOS only (Google Play has no public lookup). EAS Update only works in real builds, not in Expo Go or development.
 
-### `@islamashraful/rating`
+### `@expo-kit/rating`
 
 Install in the app: `npx expo install expo-store-review expo-application expo-sqlite`
 
@@ -108,7 +108,7 @@ Install in the app: `npx expo install expo-store-review expo-application expo-sq
 - `openReviewPage({ appStoreId })`: opens the App Store app on the "Write a review" page, with no limits. For a "Rate us" button in Settings. `appStoreId` is the number in the app's App Store link. Opens the store of the user's own country. On Android it opens the Play Store with the bundle ID.
 
 ```tsx
-import { openReviewPage, requestReviewIfReady, setReviewLimits } from '@islamashraful/rating';
+import { openReviewPage, requestReviewIfReady, setReviewLimits } from '@expo-kit/rating';
 
 // Optional, once at startup. Only for apps that want other limits.
 setReviewLimits({ minEvents: 10, minDays: 7 });
@@ -123,7 +123,7 @@ requestReviewIfReady();
 
 The counts are saved on the device. Apple decides whether the popup really appears: always during development, never in TestFlight, and at most 3 times a year from the App Store.
 
-### `@islamashraful/mail`
+### `@expo-kit/mail`
 
 Install in the app: `npx expo install expo-mail-composer expo-application expo-device`
 
@@ -134,7 +134,7 @@ Install in the app: `npx expo install expo-mail-composer expo-application expo-d
 - `getDeviceInfo()`: the same device text, e.g. for a "Copy debug info" button.
 
 ```tsx
-import { sendEmail } from '@islamashraful/mail';
+import { sendEmail } from '@expo-kit/mail';
 
 const result = await sendEmail({ to: 'hello@example.com', subject: 'About Kite' });
 if (result === 'unavailable') showAddress('hello@example.com');
@@ -174,7 +174,7 @@ The playground reads package source directly, so edits show up without rebuildin
 
 1. Copy `packages/core` to `packages/<name>` and rename it in `package.json`.
 2. Native libraries the package uses go in `peerDependencies` (the app installs them with `npx expo install`).
-3. To use `core` inside it, add `"@islamashraful/core": "workspace:^"` to its `dependencies`.
+3. To use `core` inside it, add `"@expo-kit/core": "workspace:^"` to its `dependencies`.
 4. Add it to `apps/playground/package.json` as `"workspace:*"` and run `bun install`.
 
 ## Rules

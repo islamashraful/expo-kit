@@ -1,4 +1,4 @@
-import { reportError, useOnForeground } from '@islamashraful/core';
+import { reportError, useOnForeground } from '@expo-kit/core';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useState } from 'react';
 

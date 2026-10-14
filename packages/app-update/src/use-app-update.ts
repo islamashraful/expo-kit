@@ -1,5 +1,5 @@
-import { reportError, useOnForeground } from '@islamashraful/core';
-import { kitStorage } from '@islamashraful/core/storage';
+import { reportError, useOnForeground } from '@expo-kit/core';
+import { kitStorage } from '@expo-kit/core/storage';
 import * as Application from 'expo-application';
 import * as Updates from 'expo-updates';
 import { useCallback, useEffect, useRef, useState } from 'react';

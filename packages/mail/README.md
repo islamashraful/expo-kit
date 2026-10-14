@@ -1,11 +1,11 @@
-# @islamashraful/mail
+# @expo-kit/mail
 
-Contact email with device info. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57.
+Contact email with device info. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 
 ```sh
-npx expo install @islamashraful/mail expo-mail-composer expo-application expo-device
+npx expo install @expo-kit/mail expo-mail-composer expo-application expo-device
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npx expo install @islamashraful/mail expo-mail-composer expo-application expo-de
 - `getDeviceInfo()`: the same device text, e.g. for a "Copy debug info" button.
 
 ```tsx
-import { sendEmail } from '@islamashraful/mail';
+import { sendEmail } from '@expo-kit/mail';
 
 const result = await sendEmail({ to: 'hello@example.com', subject: 'About Kite' });
 if (result === 'unavailable') showAddress('hello@example.com');
