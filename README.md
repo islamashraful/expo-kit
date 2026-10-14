@@ -8,17 +8,24 @@ Built for Expo SDK 57. Not published to npm yet.
 
 | Package | What it does |
 |---|---|
-| `@islamashraful/core` | Shared hooks used by the other packages |
+| `@islamashraful/core` | Shared helpers used by the other packages |
 
 ### `@islamashraful/core`
 
 Uses only React Native, no extra native libraries.
 
 - `useOnForeground(callback)`: runs `callback` every time the app comes back to the front.
+- `setErrorReporter(fn)`: the app tells the kit where to send errors (e.g. Sentry). Call once at startup.
+- `reportError(error, context?)`: used by kit packages to send an error to that place. In development it's also logged to the console.
 
 ```tsx
-import { useOnForeground } from '@islamashraful/core';
+import { setErrorReporter, useOnForeground } from '@islamashraful/core';
+import * as Sentry from '@sentry/react-native';
 
+// Once at app startup. Sentry itself is still set up by the app.
+setErrorReporter((error, context) => Sentry.captureException(error, { extra: context }));
+
+// In a component
 useOnForeground(() => {
   refreshData();
 });
