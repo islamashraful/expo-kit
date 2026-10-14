@@ -12,6 +12,7 @@ Built for Expo SDK 57. Not published to npm yet.
 | `@islamashraful/notifications` | Notification permission, scheduling and tap handling |
 | `@islamashraful/app-update` | App Store and EAS Update check with a native update sheet |
 | `@islamashraful/rating` | App Store review prompt with limits |
+| `@islamashraful/mail` | Contact email with device info |
 
 ### `@islamashraful/core`
 
@@ -122,9 +123,25 @@ requestReviewIfReady();
 
 The counts are saved on the device. Apple decides whether the popup really appears: always during development, never in TestFlight, and at most 3 times a year from the App Store.
 
+### `@islamashraful/mail`
+
+Install in the app: `npx expo install expo-mail-composer expo-application expo-device`
+
+- `sendEmail({ to, subject?, body?, includeDeviceInfo? })`: opens an email with everything filled in. For a "Contact us" button.
+  - Uses the in-app mail screen when the Mail app is set up, otherwise the phone's default mail app (e.g. Gmail).
+  - Adds app version, device and OS version at the bottom, so support emails are easier to answer. Turn off with `includeDeviceInfo: false`.
+  - Returns `'sent'`, `'saved'`, `'cancelled'`, `'opened'` (another mail app opened) or `'unavailable'` (no mail app; show the address instead).
+- `getDeviceInfo()`: the same device text, e.g. for a "Copy debug info" button.
+
+```tsx
+import { sendEmail } from '@islamashraful/mail';
+
+const result = await sendEmail({ to: 'hello@example.com', subject: 'About Kite' });
+if (result === 'unavailable') showAddress('hello@example.com');
+```
+
 ### Planned
 
-- `mail`: mail composer wrapper
 - `cloudkit`, `apple-ai`: native Swift modules
 - `purchases`: RevenueCat setup and paywall (brought back when needed)
 

@@ -1,0 +1,48 @@
+{
+  "name": "@islamashraful/mail",
+  "version": "0.0.1",
+  "description": "Contact email with device info for Expo apps",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/mail"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@islamashraful/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "expo-application": ">=57.0.0",
+    "expo-device": ">=57.0.0",
+    "expo-mail-composer": ">=57.0.0",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "expo-application": "~57.0.3",
+    "expo-device": "~57.0.2",
+    "expo-mail-composer": "~57.0.2",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

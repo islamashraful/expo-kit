@@ -17,6 +17,7 @@ const PACKAGES: PackageScreen[] = [
     href: '/app-update',
   },
   { name: '@islamashraful/rating', description: 'Review prompt with limits', href: '/rating' },
+  { name: '@islamashraful/mail', description: 'Contact email with device info', href: '/mail' },
 ];
 
 export default function HomeScreen() {
