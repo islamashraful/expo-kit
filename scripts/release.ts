@@ -14,7 +14,10 @@ await $`bun run typecheck`;
 const outDir = await mkdtemp(join(tmpdir(), 'expo-kit-release-'));
 const published: string[] = [];
 
-for (const dir of await readdir('packages')) {
+// core first, the other packages depend on it.
+const dirs = (await readdir('packages')).sort((a, b) => (a === 'core' ? -1 : b === 'core' ? 1 : a.localeCompare(b)));
+
+for (const dir of dirs) {
   const pkg = await Bun.file(join('packages', dir, 'package.json')).json();
   if (pkg.private) continue;
   const id = `${pkg.name}@${pkg.version}`;
@@ -28,7 +31,14 @@ for (const dir of await readdir('packages')) {
   const packDir = join(outDir, dir);
   await $`bun pm pack --destination ${packDir}`.cwd(join('packages', dir)).quiet();
   const [tarball] = await readdir(packDir);
-  await $`npm publish ${join(packDir, tarball)} --access public --registry ${REGISTRY}`;
+  // Connected to the terminal, so npm can show the login link and wait for 2FA.
+  const publish = Bun.spawn(['npm', 'publish', join(packDir, tarball), '--access', 'public', '--registry', REGISTRY], {
+    stdio: ['inherit', 'inherit', 'inherit'],
+  });
+  if ((await publish.exited) !== 0) {
+    console.error(`\nFailed to publish ${id}. Run \`bun run release\` again, it skips what's already on npm.`);
+    process.exit(1);
+  }
   await $`git tag ${id}`;
   published.push(id);
 }
