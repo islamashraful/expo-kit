@@ -166,9 +166,11 @@ The playground reads package source directly, so edits show up without rebuildin
 
 ## Releasing
 
-1. After changing a package, run `bun run changeset`. Pick the packages, the kind of change (patch = fix, minor = new feature, major = breaking) and write one line about it. Commit the file it creates.
-2. When ready to release, run `bun run version-packages`. It raises the version numbers and writes each package's `CHANGELOG.md`. Commit that.
-3. Run `bun run release` (needs `npm login` once). It publishes every package whose new version isn't on npm yet and tags it in git. Then `git push --tags`.
+1. After changing a package, run `bun run changeset`. Pick the packages, the kind of change (patch = fix, minor = new feature, major = breaking) and write one line about it. Commit the file it creates and push.
+2. GitHub opens (or updates) a "Version packages" pull request with the new version numbers and changelogs.
+3. Merge it when you want to release. GitHub publishes the new versions to npm and tags them.
+
+Publishing uses npm trusted publishing, so no npm token is stored anywhere. A new package must be published once by hand (`bun run release`, needs `npm login`) and then get a trusted publisher on npmjs.com (Settings → Trusted publisher → GitHub Actions, workflow `release.yml`).
 
 ## Adding a package
 

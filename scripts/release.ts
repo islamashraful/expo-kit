@@ -1,5 +1,6 @@
 // Publishes every package whose current version isn't on npm yet.
-// Run `bun run version-packages` first to bump versions.
+// Runs in GitHub Actions after the "Version packages" pull request is merged.
+// Can also run locally after `bun run version-packages` (npm then asks for 2FA).
 // bun packs (turns `workspace:^` into real versions), npm publishes (handles login and 2FA).
 import { $ } from 'bun';
 import { mkdtemp, readdir } from 'node:fs/promises';
@@ -44,4 +45,7 @@ for (const dir of dirs) {
 }
 
 console.log(published.length ? `\nPublished: ${published.join(', ')}` : '\nNothing to publish.');
-if (published.length) console.log('Push the tags with: git push --tags');
+if (published.length) {
+  if (process.env.CI) await $`git push origin ${published}`;
+  else console.log('Push the tags with: git push --tags');
+}

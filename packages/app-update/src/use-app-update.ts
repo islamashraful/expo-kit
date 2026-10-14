@@ -149,7 +149,7 @@ async function isSnoozed(days: number) {
 
 async function lookUpAppStore(bundleId: string, country: string) {
   // The timestamp avoids a cached answer from Apple's servers.
-  const url = `https://itunes.apple.com/lookup?bundleId=${encodeURIComponent(bundleId)}&country=${country}&t=${Date.now()}`;
+  const url = `https://itunes.apple.com/lookup?bundleId=${encodeURIComponent(bundleId)}&country=${encodeURIComponent(country)}&t=${Date.now()}`;
   const response = await fetch(url);
   const json = await response.json();
   const result = json?.results?.[0];
