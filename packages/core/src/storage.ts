@@ -30,6 +30,23 @@ export const kitStorage = {
     }
   },
 
+  async getString(key: string): Promise<string | null> {
+    try {
+      return await store.getItemAsync(key);
+    } catch (error) {
+      reportError(error, { fn: 'kitStorage.getString', key });
+      return null;
+    }
+  },
+
+  async setString(key: string, value: string): Promise<void> {
+    try {
+      await store.setItemAsync(key, value);
+    } catch (error) {
+      reportError(error, { fn: 'kitStorage.setString', key });
+    }
+  },
+
   async remove(key: string): Promise<void> {
     try {
       await store.removeItemAsync(key);

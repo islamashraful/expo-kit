@@ -16,6 +16,7 @@ const PACKAGES: PackageScreen[] = [
     description: 'App Store / EAS Update check, native sheet',
     href: '/app-update',
   },
+  { name: '@islamashraful/rating', description: 'Review prompt with limits', href: '/rating' },
 ];
 
 export default function HomeScreen() {

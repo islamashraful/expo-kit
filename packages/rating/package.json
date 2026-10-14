@@ -1,0 +1,48 @@
+{
+  "name": "@islamashraful/rating",
+  "version": "0.0.1",
+  "description": "App Store review prompt with sensible limits for Expo apps",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/rating"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@islamashraful/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "expo-application": ">=57.0.0",
+    "expo-sqlite": ">=57.0.0",
+    "expo-store-review": ">=57.0.0",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "expo-application": "~57.0.3",
+    "expo-sqlite": "~57.0.4",
+    "expo-store-review": "~57.0.3",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

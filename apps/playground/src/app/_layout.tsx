@@ -13,6 +13,7 @@ export default function RootLayout() {
         <Stack.Screen name="core" options={{ title: 'core' }} />
         <Stack.Screen name="notifications" options={{ title: 'notifications' }} />
         <Stack.Screen name="app-update" options={{ title: 'app-update' }} />
+        <Stack.Screen name="rating" options={{ title: 'rating' }} />
       </Stack>
     </ThemeProvider>
   );
