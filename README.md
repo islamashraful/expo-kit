@@ -14,6 +14,7 @@ Built for Expo SDK 57. Not made by or affiliated with Expo.
 | `@expo-kit/rating` | App Store review prompt with limits |
 | `@expo-kit/mail` | Contact email with device info |
 | `@expo-kit/analytics` | PostHog events and screen views |
+| `@expo-kit/purchases` | RevenueCat pro status, plans and paywall logic |
 
 ### `@expo-kit/core`
 
@@ -167,10 +168,48 @@ useTrackScreens();
 capture('task_saved', { count: 3 });
 ```
 
+### `@expo-kit/purchases`
+
+Install in the app: `npx expo install react-native-purchases` (needs a development build; in Expo Go it runs RevenueCat's Preview mode with a `test_` key).
+
+- `initPurchases({ iosApiKey, entitlement, onEvent?, debugLogs? })`: starts RevenueCat and keeps the pro status up to date. Call once at startup. iOS only; without a key everyone is free and nothing crashes.
+- `usePro()`: `{ ready, isPro, plan, productId, isTrial, willRenew, expiresAt }`. `plan` is `'lifetime'`, `'subscription'` or `null`. `ready` is `false` until RevenueCat answers.
+- `getProStatus()`, `onProChange(listener)`, `waitForProStatus()`: the same outside React, e.g. in a sync service or at startup.
+- `usePaywall({ defaultPlan?, source? })`: plans, selected plan, `buy()`, `restore()`, `purchasing`, `restoring`. Sends `paywall_viewed`. The app draws the screen.
+- `purchase(plan)`, `restore()`: never throw. They return `status`: `'success' | 'cancelled' | 'pending' | 'failed'` and `'restored' | 'empty' | 'failed'`. Errors go to `reportError`, events go to `onEvent`.
+- `usePlans()`, `loadPlans()`: plans by key (`weekly`, `monthly`, `annual`, `lifetime`, …) with `price`, `trial` (only when the user can still get it). Loaded once and shared.
+- `savingsPercent(annual, monthly)`, `pricePer(plan, 'month')`, `formatPrice(amount, currency)`: paywall text helpers.
+- `manageSubscription()`: opens Apple's subscription page.
+- `setProOverride(true | false | null)`: development only, forces pro on or off.
+- From `@expo-kit/purchases/router` (needs `expo-router`): `useProRoute()` returns `openPro(route, { allowFree? })`, which sends free users to `/paywall?redirect=route`. `usePaywallRoute()` gives the paywall `{ redirect, close }`.
+
+```tsx
+import { capture } from '@expo-kit/analytics';
+import { initPurchases, usePaywall, usePro } from '@expo-kit/purchases';
+import { usePaywallRoute, useProRoute } from '@expo-kit/purchases/router';
+
+// Once at startup
+initPurchases({
+  iosApiKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY,
+  entitlement: 'premium',
+  onEvent: capture,
+});
+
+// Anywhere
+const { isPro } = usePro();
+const openPro = useProRoute();
+openPro('/subscriptions/new', { allowFree: count < 5 });
+
+// Paywall screen
+const { redirect, close } = usePaywallRoute();
+const paywall = usePaywall({ defaultPlan: 'annual', source: redirect ?? 'direct' });
+const result = await paywall.buy();
+if (result?.status === 'success') router.push('/pro-welcome');
+```
+
 ### Planned
 
 - `cloudkit`, `apple-ai`: native Swift modules
-- `purchases`: RevenueCat setup and paywall (brought back when needed)
 
 ## Structure
 

@@ -1,5 +1,6 @@
-import { initAnalytics, useTrackScreens } from '@expo-kit/analytics';
+import { capture, initAnalytics, useTrackScreens } from '@expo-kit/analytics';
 import { showNotificationsInApp } from '@expo-kit/notifications';
+import { initPurchases } from '@expo-kit/purchases';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
@@ -8,6 +9,11 @@ initAnalytics({
   apiKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
   host: process.env.EXPO_PUBLIC_POSTHOG_HOST,
   enableInDev: true,
+});
+initPurchases({
+  iosApiKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY,
+  entitlement: process.env.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT ?? 'premium',
+  onEvent: capture,
 });
 
 export default function RootLayout() {
@@ -23,6 +29,9 @@ export default function RootLayout() {
         <Stack.Screen name="rating" options={{ title: 'rating' }} />
         <Stack.Screen name="mail" options={{ title: 'mail' }} />
         <Stack.Screen name="analytics" options={{ title: 'analytics' }} />
+        <Stack.Screen name="purchases" options={{ title: 'purchases' }} />
+        <Stack.Screen name="paywall" options={{ title: 'paywall', presentation: 'formSheet' }} />
+        <Stack.Screen name="pro-only" options={{ title: 'pro only' }} />
       </Stack>
     </ThemeProvider>
   );

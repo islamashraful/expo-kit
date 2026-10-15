@@ -1,0 +1,65 @@
+{
+  "name": "@expo-kit/purchases",
+  "version": "0.0.0",
+  "description": "RevenueCat in-app purchases, pro status and paywall logic for Expo apps",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native",
+    "revenuecat",
+    "in-app-purchases"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/purchases"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./router": {
+      "types": "./build/router.d.ts",
+      "react-native": "./src/router.ts",
+      "default": "./build/router.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@expo-kit/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "expo-router": ">=57.0.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-purchases": ">=10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "expo-router": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "expo-router": "~57.0.26",
+    "react-native-purchases": "^10.13.0",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -19,6 +19,7 @@ const PACKAGES: PackageScreen[] = [
   { name: '@expo-kit/rating', description: 'Review prompt with limits', href: '/rating' },
   { name: '@expo-kit/mail', description: 'Contact email with device info', href: '/mail' },
   { name: '@expo-kit/analytics', description: 'PostHog events and screen views', href: '/analytics' },
+  { name: '@expo-kit/purchases', description: 'RevenueCat pro status, plans, paywall', href: '/purchases' },
 ];
 
 export default function HomeScreen() {
