@@ -15,6 +15,7 @@ Built for Expo SDK 57. Not made by or affiliated with Expo.
 | `@expo-kit/mail` | Contact email with device info |
 | `@expo-kit/analytics` | PostHog events and screen views |
 | `@expo-kit/purchases` | RevenueCat pro status, plans and paywall logic |
+| `@expo-kit/cloudkit` | Typed iCloud sync with CKSyncEngine (native Swift) |
 
 ### `@expo-kit/core`
 
@@ -207,9 +208,20 @@ const result = await paywall.buy();
 if (result?.status === 'success') router.push('/pro-welcome');
 ```
 
+### `@expo-kit/cloudkit`
+
+Install in the app: `npx expo install @expo-kit/cloudkit expo-build-properties`, then add the plugin with the app's iCloud container (and `enableSceneSupport` on SDK 57 + Xcode 27). iOS 17+, needs a development build. Full guide in [packages/cloudkit/README.md](packages/cloudkit/README.md).
+
+- `defineCloudSchema({ Type: { field: field.string(), … } })`: describes the app's records; `CloudRecord<typeof schema, 'Type'>` is each record's type.
+- `createCloudSync({ container, schema, apply, conflict?, onAccountChange? })`: the sync. `apply` writes changes from other devices into the app's own database.
+- `sync.start()`, `sync.save(type, record)`, `sync.delete(type, id)`, `sync.importAll(type, records)`, `sync.syncNow()`.
+- `useCloudSync(sync)`: status (account, syncing, pending uploads/changes, last synced, error).
+
+The playground's "cloudkit" screen is a small notes app that syncs, but only in a signed development build: `com.ashislam.expokit.playground`, container `iCloud.com.ashislam.expokit.playground`.
+
 ### Planned
 
-- `cloudkit`, `apple-ai`: native Swift modules
+- `apple-ai`: native Swift module
 
 ## Structure
 

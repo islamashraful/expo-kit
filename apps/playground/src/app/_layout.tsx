@@ -32,6 +32,7 @@ export default function RootLayout() {
         <Stack.Screen name="purchases" options={{ title: 'purchases' }} />
         <Stack.Screen name="paywall" options={{ title: 'paywall', presentation: 'formSheet' }} />
         <Stack.Screen name="pro-only" options={{ title: 'pro only' }} />
+        <Stack.Screen name="cloudkit" options={{ title: 'cloudkit' }} />
       </Stack>
     </ThemeProvider>
   );

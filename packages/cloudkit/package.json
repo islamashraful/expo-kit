@@ -1,0 +1,63 @@
+{
+  "name": "@expo-kit/cloudkit",
+  "version": "0.0.0",
+  "description": "Typed CloudKit sync for Expo apps, built on CKSyncEngine",
+  "keywords": [
+    "expo",
+    "expo-kit",
+    "react-native",
+    "cloudkit",
+    "icloud",
+    "sync"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamashraful/expo-kit.git",
+    "directory": "packages/cloudkit"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts",
+    "ios",
+    "plugin/build",
+    "app.plugin.js",
+    "expo-module.config.json"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc -p plugin/tsconfig.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p plugin/tsconfig.json",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@expo-kit/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.0",
+    "@types/react": "~19.2.2",
+    "expo": "~57.0.28",
+    "typescript": "~6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

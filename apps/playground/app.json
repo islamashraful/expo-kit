@@ -8,7 +8,9 @@
     "scheme": "playground",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.ashislam.expokit.playground",
+      "appleTeamId": "KD9VY8RBBA"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +37,24 @@
       ],
       "expo-sqlite",
       "expo-mail-composer",
-      "expo-localization"
+      "expo-localization",
+      [
+        "@expo-kit/cloudkit",
+        {
+          "containers": [
+            "iCloud.com.ashislam.expokit.playground"
+          ]
+        }
+      ],
+      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "enableSceneSupport": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

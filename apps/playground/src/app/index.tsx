@@ -20,6 +20,7 @@ const PACKAGES: PackageScreen[] = [
   { name: '@expo-kit/mail', description: 'Contact email with device info', href: '/mail' },
   { name: '@expo-kit/analytics', description: 'PostHog events and screen views', href: '/analytics' },
   { name: '@expo-kit/purchases', description: 'RevenueCat pro status, plans, paywall', href: '/purchases' },
+  { name: '@expo-kit/cloudkit', description: 'Typed iCloud sync with CKSyncEngine', href: '/cloudkit' },
 ];
 
 export default function HomeScreen() {
