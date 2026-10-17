@@ -13,7 +13,7 @@ await $`bun run build`;
 await $`bun run typecheck`;
 
 const outDir = await mkdtemp(join(tmpdir(), 'expo-kit-release-'));
-const published: string[] = [];
+const published: { id: string; dir: string; version: string }[] = [];
 
 // core first, the other packages depend on it.
 const dirs = (await readdir('packages')).sort((a, b) => (a === 'core' ? -1 : b === 'core' ? 1 : a.localeCompare(b)));
@@ -41,11 +41,30 @@ for (const dir of dirs) {
     process.exit(1);
   }
   await $`git tag ${id}`;
-  published.push(id);
+  published.push({ id, dir, version: pkg.version });
 }
 
-console.log(published.length ? `\nPublished: ${published.join(', ')}` : '\nNothing to publish.');
-if (published.length) {
-  if (process.env.CI) await $`git push origin ${published}`;
-  else console.log('Push the tags with: git push --tags');
+const tags = published.map((p) => p.id);
+console.log(tags.length ? `\nPublished: ${tags.join(', ')}` : '\nNothing to publish.');
+if (tags.length) {
+  if (process.env.CI) {
+    await $`git push origin ${tags}`;
+    // One GitHub release per package, with its changelog entry as the notes.
+    for (const { id, dir, version } of published) {
+      const notes = await changelogEntry(dir, version);
+      await $`gh release create ${id} --title ${id} --notes ${notes} --verify-tag`;
+    }
+  } else {
+    console.log('Push the tags with: git push --tags');
+  }
+}
+
+// The "## <version>" section of a package's CHANGELOG.md, without the heading.
+async function changelogEntry(dir: string, version: string) {
+  const changelog = await Bun.file(join('packages', dir, 'CHANGELOG.md')).text();
+  const start = changelog.indexOf(`\n## ${version}\n`);
+  if (start === -1) return '';
+  const body = changelog.slice(start + `\n## ${version}\n`.length);
+  const end = body.indexOf('\n## ');
+  return (end === -1 ? body : body.slice(0, end)).trim();
 }

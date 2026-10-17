@@ -46,3 +46,5 @@ jobs:
 
       - if: steps.changesets.outputs.has-changesets == 'false'
         run: bun run release
+        env:
+          GH_TOKEN: ${{ github.token }} # creates the GitHub releases
