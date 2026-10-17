@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/app-update",
-  "version": "0.1.2",
+  "version": "58.0.0",
   "description": "App Store and EAS Update checks with a native update sheet for Expo apps",
   "keywords": [
     "expo",
@@ -40,19 +40,19 @@
     "@expo-kit/core": "workspace:^"
   },
   "peerDependencies": {
-    "@expo/ui": ">=57.0.0",
-    "expo-application": ">=57.0.0",
-    "expo-sqlite": ">=57.0.0",
-    "expo-updates": ">=57.0.0",
+    "@expo/ui": "^58.0.0",
+    "expo-application": "^58.0.0",
+    "expo-sqlite": "^58.0.0",
+    "expo-updates": "^58.0.0",
     "react": "*",
     "react-native": "*"
   },
   "devDependencies": {
-    "@expo/ui": "~57.0.23",
-    "@types/react": "~19.2.2",
-    "expo-application": "~57.0.3",
-    "expo-sqlite": "~57.0.4",
-    "expo-updates": "~57.0.26",
+    "@expo/ui": "~58.0.20",
+    "@types/react": "~19.3.0",
+    "expo-application": "~58.1.2",
+    "expo-sqlite": "~58.0.13",
+    "expo-updates": "~58.0.17",
     "typescript": "~6.0.3"
   },
   "publishConfig": {

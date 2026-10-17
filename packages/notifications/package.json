@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/notifications",
-  "version": "0.1.1",
+  "version": "58.0.0",
   "description": "Notification permission, tap handling and scheduling helpers for Expo apps",
   "keywords": [
     "expo",
@@ -42,11 +42,11 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "expo-notifications": ">=57.0.0"
+    "expo-notifications": "^58.0.0"
   },
   "devDependencies": {
-    "@types/react": "~19.2.2",
-    "expo-notifications": "~57.0.22",
+    "@types/react": "~19.3.0",
+    "expo-notifications": "~58.1.5",
     "typescript": "~6.0.3"
   },
   "publishConfig": {

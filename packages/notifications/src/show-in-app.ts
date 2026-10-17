@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 
 /**
- * Shows notifications as banners even while the app is open (by default they're hidden).
+ * Shows notifications as banners even while the app is open, with or without sound.
  * Call once at app startup, outside any component.
  */
 export function showNotificationsInApp({ sound = true }: { sound?: boolean } = {}) {

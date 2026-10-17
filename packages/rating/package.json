@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/rating",
-  "version": "0.1.1",
+  "version": "58.0.0",
   "description": "App Store review prompt with sensible limits for Expo apps",
   "keywords": [
     "expo",
@@ -40,15 +40,15 @@
     "@expo-kit/core": "workspace:^"
   },
   "peerDependencies": {
-    "expo-application": ">=57.0.0",
-    "expo-sqlite": ">=57.0.0",
-    "expo-store-review": ">=57.0.0",
+    "expo-application": "^58.0.0",
+    "expo-sqlite": "^58.0.0",
+    "expo-store-review": "^58.0.0",
     "react-native": "*"
   },
   "devDependencies": {
-    "expo-application": "~57.0.3",
-    "expo-sqlite": "~57.0.4",
-    "expo-store-review": "~57.0.3",
+    "expo-application": "~58.1.2",
+    "expo-sqlite": "~58.0.13",
+    "expo-store-review": "~58.0.2",
     "typescript": "~6.0.3"
   },
   "publishConfig": {

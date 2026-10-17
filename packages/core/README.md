@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@expo-kit/core)](https://www.npmjs.com/package/@expo-kit/core)
 
-Shared helpers used by the other packages. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
+Shared helpers used by the other packages. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Version 58.x is for Expo SDK 58. Not made by Expo.
 
 ## Install
 

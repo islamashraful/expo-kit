@@ -143,7 +143,7 @@ export const notes = {
     const file = new File(Paths.document, `attachment-${note.id}.txt`);
     if (file.exists) file.delete();
     file.create();
-    file.write(`Attached at ${new Date().toISOString()} to ${note.title}`);
+    file.writeSync(`Attached at ${new Date().toISOString()} to ${note.title}`);
     const next: Note = { ...note, attachment: file.uri, updatedAt: new Date() };
     notesDb.putNotes([next]);
     notesSync.save('Note', next);

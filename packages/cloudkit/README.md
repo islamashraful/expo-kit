@@ -15,7 +15,7 @@ iOS 17+ only. Needs a development build (not Expo Go).
 ## Install
 
 ```sh
-npx expo install @expo-kit/cloudkit expo-build-properties
+npx expo install @expo-kit/cloudkit
 ```
 
 `app.json`:
@@ -25,15 +25,13 @@ npx expo install @expo-kit/cloudkit expo-build-properties
   "expo": {
     "ios": { "bundleIdentifier": "com.example.app" },
     "plugins": [
-      ["@expo-kit/cloudkit", { "containers": ["iCloud.com.example.app"] }],
-      ["expo-build-properties", { "ios": { "enableSceneSupport": true } }]
+      ["@expo-kit/cloudkit", { "containers": ["iCloud.com.example.app"] }]
     ]
   }
 }
 ```
 
 - The plugin adds the iCloud entitlements, background pushes, and sets iOS 17 as the minimum.
-- `enableSceneSupport` is needed for Expo SDK 57 apps built with Xcode 27 (the app crashes at launch without it). SDK 58+ doesn't need it.
 - The first signed build registers the container on your Apple team (Xcode automatic signing does this).
 
 ## 1. Describe the data

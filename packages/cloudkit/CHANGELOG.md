@@ -1,5 +1,13 @@
 # @expo-kit/cloudkit
 
+## 58.0.0
+
+### Major Changes
+
+- Versions now match the Expo SDK. 58.x is for Expo SDK 58. For SDK 57, use 0.1.x.
+- Updated dependencies
+  - @expo-kit/core@58.0.0
+
 ## 0.1.2
 
 ### Patch Changes

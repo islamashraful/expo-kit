@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/analytics",
-  "version": "0.1.1",
+  "version": "58.0.0",
   "description": "PostHog analytics setup for Expo apps",
   "keywords": [
     "expo",
@@ -38,16 +38,16 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "expo-application": ">=57.0.0",
-    "expo-router": ">=57.0.0",
+    "expo-application": "^58.0.0",
+    "expo-router": "^58.0.0",
     "posthog-react-native": ">=4.39.0",
     "react": "*",
     "react-native": "*"
   },
   "devDependencies": {
-    "@types/react": "~19.2.2",
-    "expo-application": "~57.0.3",
-    "expo-router": "~57.0.26",
+    "@types/react": "~19.3.0",
+    "expo-application": "~58.1.2",
+    "expo-router": "~58.0.23",
     "posthog-react-native": "^4.81.1",
     "typescript": "~6.0.3"
   },

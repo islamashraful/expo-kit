@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@expo-kit/notifications)](https://www.npmjs.com/package/@expo-kit/notifications)
 
-Notification permission, scheduling and tap handling. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
+Notification permission, scheduling and tap handling. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Version 58.x is for Expo SDK 58. Not made by Expo.
 
 ## Install
 

@@ -2,7 +2,7 @@
 
 Small, typed packages for Expo apps. Each feature is its own package, so an app only installs what it needs. All packages are on npm under [`@expo-kit`](https://www.npmjs.com/org/expo-kit).
 
-Built for Expo SDK 57. Not made by or affiliated with Expo.
+Versions match the Expo SDK: 58.x is for Expo SDK 58. On SDK 57, use 0.1.x (for example `npx expo install @expo-kit/core@0.1`). Not made by or affiliated with Expo.
 
 ## Packages
 
