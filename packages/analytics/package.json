@@ -14,6 +14,10 @@
     "url": "git+https://github.com/islamashraful/expo-kit.git",
     "directory": "packages/analytics"
   },
+  "homepage": "https://github.com/islamashraful/expo-kit/tree/main/packages/analytics#readme",
+  "bugs": {
+    "url": "https://github.com/islamashraful/expo-kit/issues"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "exports": {

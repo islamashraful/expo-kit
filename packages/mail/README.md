@@ -1,6 +1,8 @@
 # @expo-kit/mail
 
-Contact email with device info. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
+[![npm](https://img.shields.io/npm/v/@expo-kit/mail)](https://www.npmjs.com/package/@expo-kit/mail)
+
+Contact email with device info. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 

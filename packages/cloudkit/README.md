@@ -1,6 +1,8 @@
 # @expo-kit/cloudkit
 
-Typed iCloud sync for Expo apps. Your app keeps its own database; this package syncs its records between the user's devices through their private iCloud, using Apple's `CKSyncEngine` in Swift. Part of expo-kit, small packages for Expo apps. Not made by Expo or Apple.
+[![npm](https://img.shields.io/npm/v/@expo-kit/cloudkit)](https://www.npmjs.com/package/@expo-kit/cloudkit)
+
+Typed iCloud sync for Expo apps. Your app keeps its own database; this package syncs its records between the user's devices through their private iCloud, using Apple's `CKSyncEngine` in Swift. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Not made by Expo or Apple.
 
 - Works with any data: you describe your records once in TypeScript, and every call is typed from that.
 - Native Swift on JSI (Expo Modules API), no old bridge.

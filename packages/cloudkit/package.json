@@ -16,6 +16,10 @@
     "url": "git+https://github.com/islamashraful/expo-kit.git",
     "directory": "packages/cloudkit"
   },
+  "homepage": "https://github.com/islamashraful/expo-kit/tree/main/packages/cloudkit#readme",
+  "bugs": {
+    "url": "https://github.com/islamashraful/expo-kit/issues"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "exports": {

@@ -1,6 +1,8 @@
 # @expo-kit/purchases
 
-RevenueCat in-app purchases: pro status, plans with prices and trials, buy, restore and paywall logic. Part of expo-kit, small packages for Expo apps. Not made by Expo or RevenueCat.
+[![npm](https://img.shields.io/npm/v/@expo-kit/purchases)](https://www.npmjs.com/package/@expo-kit/purchases)
+
+RevenueCat in-app purchases: pro status, plans with prices and trials, buy, restore and paywall logic. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Not made by Expo or RevenueCat.
 
 The app draws its own paywall; this package does everything behind it.
 

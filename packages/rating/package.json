@@ -13,6 +13,10 @@
     "url": "git+https://github.com/islamashraful/expo-kit.git",
     "directory": "packages/rating"
   },
+  "homepage": "https://github.com/islamashraful/expo-kit/tree/main/packages/rating#readme",
+  "bugs": {
+    "url": "https://github.com/islamashraful/expo-kit/issues"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "exports": {

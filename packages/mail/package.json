@@ -13,6 +13,10 @@
     "url": "git+https://github.com/islamashraful/expo-kit.git",
     "directory": "packages/mail"
   },
+  "homepage": "https://github.com/islamashraful/expo-kit/tree/main/packages/mail#readme",
+  "bugs": {
+    "url": "https://github.com/islamashraful/expo-kit/issues"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "exports": {

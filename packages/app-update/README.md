@@ -1,6 +1,8 @@
 # @expo-kit/app-update
 
-App Store and EAS Update check with a native update sheet. Part of expo-kit, small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
+[![npm](https://img.shields.io/npm/v/@expo-kit/app-update)](https://www.npmjs.com/package/@expo-kit/app-update)
+
+App Store and EAS Update check with a native update sheet. Part of [expo-kit](https://github.com/islamashraful/expo-kit), small packages for Expo apps. Built for Expo SDK 57. Not made by Expo.
 
 ## Install
 
