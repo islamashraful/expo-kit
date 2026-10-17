@@ -17,22 +17,7 @@ Built for Expo SDK 57. Not made by or affiliated with Expo.
 | [`@expo-kit/purchases`](packages/purchases) | [![npm](https://img.shields.io/npm/v/@expo-kit/purchases)](https://www.npmjs.com/package/@expo-kit/purchases) | RevenueCat pro status, plans and paywall logic |
 | [`@expo-kit/cloudkit`](packages/cloudkit) | [![npm](https://img.shields.io/npm/v/@expo-kit/cloudkit)](https://www.npmjs.com/package/@expo-kit/cloudkit) | Typed iCloud sync with CKSyncEngine (native Swift) |
 
-## Quick start
-
-Install a package with the Expo libraries it uses:
-
-```sh
-npx expo install @expo-kit/rating expo-store-review expo-application expo-sqlite
-```
-
-```tsx
-import { requestReviewIfReady } from '@expo-kit/rating';
-
-// After a happy moment, e.g. a task was saved
-requestReviewIfReady();
-```
-
-Every package has its own install line and guide. Open it from the table above.
+Open a package from the table for its install steps and guide.
 
 ## Contributing
 
