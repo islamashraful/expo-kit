@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/rating",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "App Store review prompt with sensible limits for Expo apps",
   "keywords": [
     "expo",

@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/purchases",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "RevenueCat in-app purchases, pro status and paywall logic for Expo apps",
   "keywords": [
     "expo",
