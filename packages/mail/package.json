@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/mail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Contact email with device info for Expo apps",
   "keywords": [
     "expo",

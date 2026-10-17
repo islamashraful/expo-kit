@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/cloudkit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Typed CloudKit sync for Expo apps, built on CKSyncEngine",
   "keywords": [
     "expo",

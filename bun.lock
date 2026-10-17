@@ -58,7 +58,7 @@
     },
     "packages/analytics": {
       "name": "@expo-kit/analytics",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "devDependencies": {
         "@types/react": "~19.2.2",
         "expo-application": "~57.0.3",
@@ -76,7 +76,7 @@
     },
     "packages/app-update": {
       "name": "@expo-kit/app-update",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -99,7 +99,7 @@
     },
     "packages/cloudkit": {
       "name": "@expo-kit/cloudkit",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -117,7 +117,7 @@
     },
     "packages/core": {
       "name": "@expo-kit/core",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "devDependencies": {
         "@types/react": "~19.2.2",
         "expo-sqlite": "~57.0.4",
@@ -134,7 +134,7 @@
     },
     "packages/mail": {
       "name": "@expo-kit/mail",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -153,7 +153,7 @@
     },
     "packages/notifications": {
       "name": "@expo-kit/notifications",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -170,7 +170,7 @@
     },
     "packages/purchases": {
       "name": "@expo-kit/purchases",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -192,7 +192,7 @@
     },
     "packages/rating": {
       "name": "@expo-kit/rating",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
