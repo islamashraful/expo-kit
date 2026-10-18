@@ -18,7 +18,7 @@ npx expo install @expo-kit/rating expo-store-review expo-application expo-sqlite
   - it hasn't asked in the last 60 days (`daysBetween`)
   - it hasn't asked for this app version yet
 - `setReviewLimits(limits)`: an app with its own limits sets them once at startup, and every `requestReviewIfReady()` call uses them. Anything left out keeps the default.
-- `openReviewPage({ appStoreId })`: opens the App Store app on the "Write a review" page, with no limits. For a "Rate us" button in Settings. `appStoreId` is the number in the app's App Store link. Opens the store of the user's own country. On Android it opens the Play Store with the bundle ID.
+- `openReviewPage({ appStoreId })`: opens the App Store app on the "Write a review" page, with no limits. For a "Rate us" button in Settings. `appStoreId` is the number in the app's App Store link. Opens the store of the user's own country. On Android it opens the Play Store with the bundle ID. If the store app can't be opened (for example the App Store is blocked by Screen Time), it opens the store's web page instead.
 
 ```tsx
 import { openReviewPage, requestReviewIfReady, setReviewLimits } from '@expo-kit/rating';
