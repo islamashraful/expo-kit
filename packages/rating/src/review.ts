@@ -93,24 +93,35 @@ export type OpenReviewPageOptions = {
 /**
  * Opens the store's "Write a review" page. For a "Rate us" button in Settings.
  * No limits, it always opens. Opens the store of the user's own country.
- * Returns `false` if it couldn't open.
+ * If the store app can't be opened (e.g. the App Store is blocked by Screen Time),
+ * opens the store's web page instead. Returns `false` if neither could open.
  */
 export async function openReviewPage({
   appStoreId,
   bundleId = Application.applicationId ?? undefined,
 }: OpenReviewPageOptions): Promise<boolean> {
-  try {
-    if (Platform.OS === 'android') {
-      if (!bundleId) return false;
-      await Linking.openURL(`market://details?id=${bundleId}`);
-      return true;
-    }
+  let appUrl: string;
+  let webUrl: string;
+  if (Platform.OS === 'android') {
+    if (!bundleId) return false;
+    appUrl = `market://details?id=${bundleId}`;
+    webUrl = `https://play.google.com/store/apps/details?id=${bundleId}`;
+  } else {
     // Opens the App Store app directly on the "Write a review" page.
-    await Linking.openURL(`itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${appStoreId}?action=write-review`);
+    appUrl = `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${appStoreId}?action=write-review`;
+    webUrl = `https://apps.apple.com/app/id${appStoreId}?action=write-review`;
+  }
+  try {
+    await Linking.openURL(appUrl);
     return true;
-  } catch (error) {
-    reportError(error, { fn: 'openReviewPage' });
-    return false;
+  } catch (appError) {
+    try {
+      await Linking.openURL(webUrl);
+      return true;
+    } catch (webError) {
+      reportError(webError, { fn: 'openReviewPage', appError });
+      return false;
+    }
   }
 }
 
