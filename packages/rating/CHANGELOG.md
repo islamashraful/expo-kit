@@ -1,5 +1,11 @@
 # @expo-kit/rating
 
+## 58.0.1
+
+### Patch Changes
+
+- ff71e19: `openReviewPage` opens the store's web page when the store app can't be opened, and only reports an error if both fail.
+
 ## 58.0.0
 
 ### Major Changes
