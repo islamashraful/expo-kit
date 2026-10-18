@@ -191,7 +191,7 @@
     },
     "packages/rating": {
       "name": "@expo-kit/rating",
-      "version": "58.0.0",
+      "version": "58.0.1",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
