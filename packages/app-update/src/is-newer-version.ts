@@ -8,3 +8,10 @@ export function isNewerVersion(candidate: string, current: string): boolean {
   }
   return false;
 }
+
+/** True if `candidate` has a higher major version than `current`, e.g. "3.0" > "2.9". */
+export function isNewerMajor(candidate: string, current: string): boolean {
+  const a = parseInt(candidate.split('.')[0], 10) || 0;
+  const b = parseInt(current.split('.')[0], 10) || 0;
+  return a > b;
+}

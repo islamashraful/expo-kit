@@ -12,10 +12,12 @@ npx expo install @expo-kit/notifications expo-notifications
 
 ## Usage
 
-- `showNotificationsInApp()`: show notifications as banners even while the app is open. Call once at startup.
+- `showNotificationsInApp({ sound?, banner? })`: show notifications as banners even while the app is open. Call once at startup.
+  - `banner: false`: while the app is open they only go to Notification Center, without a banner.
 - `useNotificationPermission()`: `{ granted, status, canAskAgain, request }`. Checks again when the app comes back to the front.
 - `useNotificationTap(onTap)`: runs when the user taps a notification, whether the app was open or closed.
-- `scheduleNotification({ title, body, data, at })`: returns the id, or `null` if it failed (the error goes to `reportError`).
+- `scheduleNotification({ id?, title, body, data, at })`: returns the id, or `null` if it failed (the error goes to `reportError`).
+  - `id`: your own id, e.g. an item ID, so you can cancel it later without saving the returned one. Default: a new random id.
 - `cancelNotifications(ids)`: cancels scheduled notifications.
 
 ```tsx
