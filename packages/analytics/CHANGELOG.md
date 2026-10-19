@@ -1,5 +1,11 @@
 # @expo-kit/analytics
 
+## 58.1.0
+
+### Minor Changes
+
+- 4918221: `initAnalytics` takes an optional `appName`, the new `register()` adds properties to every event, and `useTrackScreens({ name: 'route' })` sends route names like `/items/[id]`.
+
 ## 58.0.0
 
 ### Major Changes
