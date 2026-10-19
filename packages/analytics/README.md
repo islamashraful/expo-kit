@@ -12,12 +12,14 @@ npx expo install @expo-kit/analytics posthog-react-native expo-application expo-
 
 ## Usage
 
-- `initAnalytics({ apiKey, host?, enableInDev?, options? })`: starts PostHog. Call once at startup.
+- `initAnalytics({ apiKey, host?, enableInDev?, appName?, options? })`: starts PostHog. Call once at startup.
   - Off in development unless `enableInDev: true`, and off when `apiKey` is empty. Every other function is safe to call either way.
   - `host` defaults to the EU server (`https://eu.i.posthog.com`).
-  - Every event gets `app`, `app_version`, `environment` and `platform`.
-- `useTrackScreens()`: records a screen view on every route change. Call once in the root layout.
+  - Every event gets `app`, `app_version`, `environment` and `platform`. `app` is the app's name, unless you set `appName`.
+- `useTrackScreens({ name? })`: records a screen view on every route change. Call once in the root layout.
+  - `name: 'route'` sends the route file, e.g. `/items/[id]`, instead of the address, e.g. `/items/42`. Keeps IDs out of analytics.
 - `capture(event, properties?)`: sends an event.
+- `register(properties)`: adds properties to every following event, e.g. `register({ language: 'de' })`.
 - `identify(userId, properties?)`: links the following events to a user (e.g. a device ID). Also saves `first_app_version` once.
 - `resetAnalytics()`: forgets the user, e.g. after logging out.
 - `getPostHog()`: the PostHog client for anything else (e.g. feature flags), or `null` when off.

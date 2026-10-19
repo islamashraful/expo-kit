@@ -12,11 +12,14 @@ export type AnalyticsOptions = {
   host?: string;
   /** Sends events from development builds too, e.g. to try out a new event. Default `false`. */
   enableInDev?: boolean;
+  /** Sent as `app` with every event. Default: the app's name from the native project. */
+  appName?: string;
   /** Any other PostHog option. */
   options?: Omit<PostHogOptions, 'host'>;
 };
 
 let client: PostHog | null = null;
+let appName: string | null = null;
 
 /**
  * Starts PostHog. Call once at app startup. Does nothing in development
@@ -26,9 +29,11 @@ export function initAnalytics({
   apiKey,
   host = 'https://eu.i.posthog.com',
   enableInDev = false,
+  appName: name,
   options,
 }: AnalyticsOptions) {
   if (client || !apiKey || (__DEV__ && !enableInDev)) return;
+  appName = name ?? null;
   client = new PostHog(apiKey, { host, ...options });
   // Added to every event, so dashboards can split by app and environment.
   void client.register(baseProperties());
@@ -37,6 +42,14 @@ export function initAnalytics({
 /** Sends an event, e.g. `capture('task_saved', { count: 3 })`. */
 export function capture(event: string, properties?: AnalyticsProperties) {
   client?.capture(event, properties);
+}
+
+/**
+ * Adds properties to every following event, e.g. `register({ language: 'de' })`.
+ * Call again with the same key to change the value.
+ */
+export function register(properties: AnalyticsProperties) {
+  void client?.register(properties);
 }
 
 /** Records a screen view. `useTrackScreens()` does this for every route. */
@@ -67,7 +80,7 @@ export function getPostHog() {
 
 function baseProperties(): AnalyticsProperties {
   return {
-    app: Application.applicationName ?? null,
+    app: appName ?? Application.applicationName ?? null,
     app_version: Application.nativeApplicationVersion ?? null,
     environment: __DEV__ ? 'development' : 'production',
     platform: Platform.OS,
