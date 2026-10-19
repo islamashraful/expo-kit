@@ -1,5 +1,5 @@
-import { Button, Icon, Text } from '@expo/ui';
-import { controlSize, frame } from '@expo/ui/swift-ui/modifiers';
+import { Button, Icon, Text, type BottomSheetProps } from '@expo/ui';
+import { controlSize, frame, interactiveDismissDisabled } from '@expo/ui/swift-ui/modifiers';
 
 import type { SheetButtonProps, SheetIconProps } from './sheet-parts';
 
@@ -10,6 +10,11 @@ export function SheetButton({ label, onPress, disabled }: SheetButtonProps) {
       <Text modifiers={[frame({ maxWidth: Infinity })]}>{label}</Text>
     </Button>
   );
+}
+
+/** Stops swiping the sheet away while the update is required. */
+export function sheetModifiers(required: boolean): BottomSheetProps['modifiers'] {
+  return required ? [interactiveDismissDisabled()] : undefined;
 }
 
 export function SheetIcon({ type }: SheetIconProps) {
