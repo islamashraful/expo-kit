@@ -1,9 +1,15 @@
 import { Button, type BottomSheetProps } from '@expo/ui';
+import type { ColorValue } from 'react-native';
 
 import type { AppUpdateType } from './use-app-update';
 
-export type SheetButtonProps = { label: string; onPress: () => void; disabled?: boolean };
-export type SheetIconProps = { type: AppUpdateType | null };
+export type SheetButtonProps = {
+  label: string;
+  onPress: () => void;
+  disabled?: boolean;
+  tintColor?: ColorValue;
+};
+export type SheetIconProps = { type: AppUpdateType | null; tintColor?: ColorValue };
 
 export function SheetButton({ label, onPress, disabled }: SheetButtonProps) {
   return <Button label={label} onPress={onPress} disabled={disabled} />;

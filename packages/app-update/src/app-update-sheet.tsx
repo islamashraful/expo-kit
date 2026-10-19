@@ -1,5 +1,6 @@
 import { BottomSheet, Button, Column, Text } from '@expo/ui';
 import { useState } from 'react';
+import type { ColorValue } from 'react-native';
 
 import { SheetButton, SheetIcon, sheetModifiers } from './sheet-parts';
 
@@ -26,10 +27,17 @@ export type AppUpdateSheetProps = {
   appName?: string;
   /** Override any text, e.g. for translations. */
   labels?: Partial<AppUpdateSheetLabels>;
+  /** Color of the icon and the main button, e.g. the app's accent color. Default: the system blue. */
+  tintColor?: ColorValue;
 };
 
 /** Native bottom sheet that shows when `useAppUpdate` finds an update. */
-export function AppUpdateSheet({ update, appName = 'the app', labels }: AppUpdateSheetProps) {
+export function AppUpdateSheet({
+  update,
+  appName = 'the app',
+  labels,
+  tintColor,
+}: AppUpdateSheetProps) {
   const [installing, setInstalling] = useState(false);
   const [failed, setFailed] = useState(false);
   // Changing it shows the sheet again after Android lets the user swipe a required update away.
@@ -95,7 +103,7 @@ export function AppUpdateSheet({ update, appName = 'the app', labels }: AppUpdat
       modifiers={sheetModifiers(required)}
       contentPadding={{ top: 32, bottom: 16, left: 24, right: 24 }}>
       <Column alignment="center" spacing={12}>
-        <SheetIcon type={update.type} />
+        <SheetIcon type={update.type} tintColor={tintColor} />
         <Text textStyle={{ fontSize: 22, fontWeight: 'bold', textAlign: 'center' }}>
           {required ? text.requiredTitle : text.title}
         </Text>
@@ -105,6 +113,7 @@ export function AppUpdateSheet({ update, appName = 'the app', labels }: AppUpdat
           label={installing ? text.installing : isStore ? text.storeButton : text.otaButton}
           onPress={onUpdate}
           disabled={installing}
+          tintColor={tintColor}
         />
         {required ? null : (
           <Button label={text.later} variant="text" onPress={update.dismiss} disabled={installing} />
