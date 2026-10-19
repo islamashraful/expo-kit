@@ -1,6 +1,6 @@
 {
   "name": "@expo-kit/app-update",
-  "version": "58.1.0",
+  "version": "58.2.0",
   "description": "App Store and EAS Update checks with a native update sheet for Expo apps",
   "keywords": [
     "expo",
