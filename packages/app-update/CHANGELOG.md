@@ -1,5 +1,11 @@
 # @expo-kit/app-update
 
+## 58.2.0
+
+### Minor Changes
+
+- 1621cc5: Add `tintColor` to `AppUpdateSheet` for the icon and main button, and fix the default icon color to the system blue.
+
 ## 58.1.0
 
 ### Minor Changes

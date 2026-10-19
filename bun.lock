@@ -75,7 +75,7 @@
     },
     "packages/app-update": {
       "name": "@expo-kit/app-update",
-      "version": "58.1.0",
+      "version": "58.2.0",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
