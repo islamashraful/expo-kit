@@ -57,7 +57,7 @@
     },
     "packages/analytics": {
       "name": "@expo-kit/analytics",
-      "version": "58.0.0",
+      "version": "58.1.0",
       "devDependencies": {
         "@types/react": "~19.3.0",
         "expo-application": "~58.1.2",
@@ -75,7 +75,7 @@
     },
     "packages/app-update": {
       "name": "@expo-kit/app-update",
-      "version": "58.0.0",
+      "version": "58.1.0",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },
@@ -152,7 +152,7 @@
     },
     "packages/notifications": {
       "name": "@expo-kit/notifications",
-      "version": "58.0.0",
+      "version": "58.1.0",
       "dependencies": {
         "@expo-kit/core": "workspace:^",
       },

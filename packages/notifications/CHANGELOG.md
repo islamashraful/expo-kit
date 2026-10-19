@@ -1,5 +1,11 @@
 # @expo-kit/notifications
 
+## 58.1.0
+
+### Minor Changes
+
+- 4918221: `scheduleNotification` takes an optional `id`, and `showNotificationsInApp` takes `banner: false` to only use Notification Center while the app is open.
+
 ## 58.0.0
 
 ### Major Changes

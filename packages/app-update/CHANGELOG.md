@@ -1,5 +1,11 @@
 # @expo-kit/app-update
 
+## 58.1.0
+
+### Minor Changes
+
+- 4918221: `useAppUpdate({ forceOnMajor: true })` makes a new major App Store version required (no "Later" in the sheet), and the hook now returns `checking`, `downloading` and `downloadProgress`.
+
 ## 58.0.0
 
 ### Major Changes
