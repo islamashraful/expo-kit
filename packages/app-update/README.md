@@ -18,7 +18,7 @@ npx expo install @expo-kit/app-update @expo/ui expo-application expo-updates exp
   - `checkNow()`: checks right away and ignores the wait, e.g. for a "Check for updates" button in Settings.
   - `forceOnMajor: true`: an App Store update with a higher major version (e.g. 2.x → 3.0) is required. `required` is `true`, the sheet has no "Later" and can't be swiped away.
   - `checking`, `downloading` and `downloadProgress` (0 to 1): for showing progress, e.g. in a Settings row.
-- `<AppUpdateSheet update={...} appName="..." />`: native iOS/Android bottom sheet. Every text can be changed with `labels`, including `requiredTitle` and `requiredMessage` for a required update.
+- `<AppUpdateSheet update={...} appName="..." />`: native iOS/Android bottom sheet. Every text can be changed with `labels`, including `requiredTitle` and `requiredMessage` for a required update. `tintColor` colors the icon and the main button, e.g. with the app's accent color (default: the system blue).
 
 ```tsx
 import { AppUpdateSheet, useAppUpdate } from '@expo-kit/app-update';
