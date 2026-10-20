@@ -1,0 +1,66 @@
+name: Expo dependencies
+
+# Every Monday (or by hand from the Actions tab):
+# - moves the playground and the packages to the library versions Expo recommends for the current SDK
+#   (same list as `expo install --fix`) and opens or updates a pull request when anything changed
+# - a newer Expo SDK gets an issue instead, that upgrade is done by hand (see CONTRIBUTING.md, Versions)
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: expo-deps
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  update:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    permissions:
+      contents: write # pull request branch
+      pull-requests: write # pull request
+      issues: write # new SDK issue
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      # postinstall builds every package
+      - run: bun install --frozen-lockfile
+
+      - id: deps
+        run: bun scripts/expo-deps.ts
+
+      - if: steps.deps.outputs.new-sdk
+        run: |
+          title="Upgrade to Expo SDK $NEW_SDK"
+          open=$(gh issue list --state open --search "\"$title\" in:title" --json number --jq length)
+          if [ "$open" = "0" ]; then
+            gh issue create --title "$title" --body "Expo SDK $NEW_SDK is out. Upgrade by hand, see CONTRIBUTING.md (Versions): upgrade the playground, set the Expo peer ranges to \`^$NEW_SDK.0.0\`, then add one changeset with every package as major."
+          fi
+        env:
+          NEW_SDK: ${{ steps.deps.outputs.new-sdk }}
+          GH_TOKEN: ${{ github.token }}
+
+      - run: bunx expo-doctor
+        working-directory: apps/playground
+
+      - run: bun run typecheck
+
+      # Pull requests opened with the default token don't start CI, so a token secret is used when set.
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.EXPO_DEPS_TOKEN || github.token }}
+          branch: expo-deps
+          delete-branch: true
+          commit-message: Align with Expo's recommended versions
+          title: Align with Expo's recommended versions
+          body: |
+            Moves the playground and the packages' devDependencies to the library versions Expo recommends for the current SDK (same list as `npx expo install --fix`).
+
+            `expo-doctor` and the type check passed. Peer ranges stay as they are, so no changeset is needed.

@@ -43,6 +43,14 @@ Versions match the Expo SDK, like Expo's own packages. 58.x is for SDK 58 only. 
 3. To use `core` inside it, add `"@expo-kit/core": "workspace:^"` to its `dependencies`.
 4. Add it to `apps/playground/package.json` as `"workspace:*"` and run `bun install`.
 
+## Dependency updates
+
+Every Monday, GitHub (`expo-deps.yml`) moves the playground and the packages' devDependencies to the versions Expo recommends for the current SDK (same as `npx expo install --fix`) and opens a pull request when anything changed. Check CI and merge it. No changeset is needed.
+
+A new Expo SDK gets an issue instead, upgrade by hand (see Versions). `posthog-react-native` and `react-native-purchases` aren't on Expo's list, check those by hand now and then.
+
+Run it locally with `bun scripts/expo-deps.ts`.
+
 ## Rules
 
 - No secret keys in packages. Apps pass their own keys in.
