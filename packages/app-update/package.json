@@ -48,11 +48,11 @@
     "react-native": "*"
   },
   "devDependencies": {
-    "@expo/ui": "~58.0.21",
+    "@expo/ui": "~58.0.23",
     "@types/react": "~19.3.0",
     "expo-application": "~58.1.2",
-    "expo-sqlite": "~58.0.13",
-    "expo-updates": "~58.0.17",
+    "expo-sqlite": "~58.0.14",
+    "expo-updates": "~58.0.18",
     "typescript": "~6.0.3"
   },
   "publishConfig": {

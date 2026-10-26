@@ -47,7 +47,7 @@
   "devDependencies": {
     "@types/react": "~19.3.0",
     "expo-application": "~58.1.2",
-    "expo-router": "~58.0.24",
+    "expo-router": "~58.0.26",
     "posthog-react-native": "^4.81.1",
     "typescript": "~6.0.3"
   },
