@@ -14,6 +14,7 @@
       "dependencies": {
         "@expo-kit/analytics": "workspace:*",
         "@expo-kit/app-update": "workspace:*",
+        "@expo-kit/apple-ai": "workspace:*",
         "@expo-kit/cloudkit": "workspace:*",
         "@expo-kit/core": "workspace:*",
         "@expo-kit/mail": "workspace:*",
@@ -92,6 +93,24 @@
         "expo-application": "^58.0.0",
         "expo-sqlite": "^58.0.0",
         "expo-updates": "^58.0.0",
+        "react": "*",
+        "react-native": "*",
+      },
+    },
+    "packages/apple-ai": {
+      "name": "@expo-kit/apple-ai",
+      "version": "58.0.0",
+      "dependencies": {
+        "@expo-kit/core": "workspace:^",
+      },
+      "devDependencies": {
+        "@types/bun": "1.3.0",
+        "@types/react": "~19.3.0",
+        "expo": "~58.0.19",
+        "typescript": "~6.0.3",
+      },
+      "peerDependencies": {
+        "expo": "^58.0.0",
         "react": "*",
         "react-native": "*",
       },
@@ -393,6 +412,8 @@
     "@expo-kit/analytics": ["@expo-kit/analytics@workspace:packages/analytics"],
 
     "@expo-kit/app-update": ["@expo-kit/app-update@workspace:packages/app-update"],
+
+    "@expo-kit/apple-ai": ["@expo-kit/apple-ai@workspace:packages/apple-ai"],
 
     "@expo-kit/cloudkit": ["@expo-kit/cloudkit@workspace:packages/cloudkit"],
 

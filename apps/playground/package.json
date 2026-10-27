@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo-kit/analytics": "workspace:*",
+    "@expo-kit/apple-ai": "workspace:*",
     "@expo-kit/app-update": "workspace:*",
     "@expo-kit/cloudkit": "workspace:*",
     "@expo-kit/core": "workspace:*",

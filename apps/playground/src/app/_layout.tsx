@@ -33,6 +33,7 @@ export default function RootLayout() {
         <Stack.Screen name="paywall" options={{ title: 'paywall', presentation: 'formSheet' }} />
         <Stack.Screen name="pro-only" options={{ title: 'pro only' }} />
         <Stack.Screen name="cloudkit" options={{ title: 'cloudkit' }} />
+        <Stack.Screen name="apple-ai" options={{ title: 'apple-ai' }} />
       </Stack>
     </ThemeProvider>
   );
