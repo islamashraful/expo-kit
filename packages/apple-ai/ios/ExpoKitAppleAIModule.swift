@@ -10,6 +10,24 @@ public class ExpoKitAppleAIModule: Module {
     Function("availability") { () -> String in
       modelAvailability()
     }
+
+    AsyncFunction("generateText") { (prompt: String, options: GenerationOptionsRecord) async throws -> String in
+      try await generateText(prompt: prompt, options: options)
+    }
+
+    Class("ModelSession", ModelSessionObject.self) {
+      Constructor { (options: SessionOptionsRecord) throws -> ModelSessionObject in
+        try ModelSessionObject(instructions: options.instructions)
+      }
+
+      Property("isResponding") { (session: ModelSessionObject) -> Bool in
+        session.isResponding
+      }
+
+      AsyncFunction("respond") { (session: ModelSessionObject, prompt: String, options: GenerationOptionsRecord) async throws -> String in
+        try await session.respond(to: prompt, options: options)
+      }
+    }
   }
 }
 
