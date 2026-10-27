@@ -2,7 +2,7 @@
 
 Manual checks to finish before the first release. `bun test` covers the JavaScript layer; this list covers the native module on simulators and devices.
 
-All checks use the playground's apple-ai screen in a development build. ✅ passed, ❌ failed, ⬜ not run.
+Simulator and iPhone checks use the playground's apple-ai screen in a development build. The Mac column is `sh native-tests/run.sh`, which runs the module's model code against the real model on a Mac with Apple Intelligence. ✅ passed, ❌ failed, ⬜ not run.
 
 ## Availability
 
@@ -18,13 +18,16 @@ All checks use the playground's apple-ai screen in a development build. ✅ pass
 
 ## Text generation
 
-| Case | Steps | Expected | Simulator | iPhone |
-|---|---|---|---|---|
-| Single prompt | Tap Generate | An answer of one or two sentences | ❌ | ⬜ |
-| Conversation | Ask in conversation, then ask "Make it shorter." | The second answer builds on the first | ⬜ | ⬜ |
-| New conversation | Tap New conversation, then ask a follow-up | No memory of earlier questions | ⬜ | ⬜ |
-| Model unavailable | Apple Intelligence off, tap Generate | `unavailable` error with the reason | – | ⬜ |
-| Prompt too long | Paste a very long text | `exceededContextWindowSize` error | ⬜ | ⬜ |
+| Case | Steps | Expected | Mac | Simulator | iPhone |
+|---|---|---|---|---|---|
+| Single prompt | Tap Generate | An answer of one or two sentences | ✅ | ❌ | ⬜ |
+| Instructions | Instructions ask for one word in capitals | The answer follows them | ✅ | ⬜ | ⬜ |
+| Answer length | `maxTokens: 10` | The answer is cut short | ✅ | ⬜ | ⬜ |
+| Conversation | Ask in conversation, then ask "Make it shorter." | The second answer builds on the first | ✅ | ⬜ | ⬜ |
+| New conversation | Tap New conversation, then ask a follow-up | No memory of earlier questions | ✅ | ⬜ | ⬜ |
+| Model unavailable | Apple Intelligence off, tap Generate | `unavailable` error with the reason | – | – | ⬜ |
+| Prompt too long | Paste a very long text | `exceededContextWindowSize` error | ✅ | ⬜ | ⬜ |
+| Busy session | Ask again before the answer is back | `concurrentRequests` error | ✅ | – | – |
 
 ## Known issues
 

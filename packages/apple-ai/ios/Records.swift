@@ -1,7 +1,4 @@
 import ExpoModulesCore
-#if canImport(FoundationModels)
-import FoundationModels
-#endif
 
 // Typed shapes that cross between JS and Swift. Expo checks them when converting.
 
@@ -14,13 +11,8 @@ struct GenerationOptionsRecord: Record {
   @Field var instructions: String?
   @Field var temperature: Double?
   @Field var maxTokens: Int?
-}
 
-#if canImport(FoundationModels)
-@available(iOS 26.0, *)
-extension GenerationOptionsRecord {
-  func toGenerationOptions() -> GenerationOptions {
-    GenerationOptions(temperature: temperature, maximumResponseTokens: maxTokens)
+  var settings: GenerationSettings {
+    GenerationSettings(temperature: temperature, maxTokens: maxTokens)
   }
 }
-#endif

@@ -100,6 +100,7 @@ try {
 
 - Simulator (iOS 26.5, Mac with Apple Intelligence): reports `available`
 - Simulator: generation fails inside Apple's safety check (`GenerationError -1 ← SensitiveContentAnalysisML 15 ← ModelManagerError 1001`), also with Apple's own sample code outside this package. Likely the iOS 26.5 simulator on a macOS 27 Mac. The same prompt works when run on the Mac directly
+- Mac, real model (`sh native-tests/run.sh`): single prompts, instructions, `maxTokens`, conversation memory, `exceededContextWindowSize` and `concurrentRequests` errors
 - Automated tests: availability reasons, errors keep their code, options reach native, sessions answer in order
 - Not tested yet: text generation on a real iPhone
 
