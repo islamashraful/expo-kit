@@ -10,6 +10,7 @@ import type { UnavailableReason } from './availability';
  * - `concurrentRequests`: the session is still answering an earlier prompt.
  * - `refusal`: the model declined to answer.
  * - `cancelled`: stopped with the `signal` option.
+ * - `invalidSchema`: the schema can't be used (built without `schema`, or rejected by Apple).
  * - `unsupportedGuide`, `decodingFailure`: structured output failed.
  * - `unknown`: anything else, including errors added by a newer iOS.
  */
@@ -25,6 +26,7 @@ export type AppleAIErrorCode =
   | 'concurrentRequests'
   | 'refusal'
   | 'cancelled'
+  | 'invalidSchema'
   | 'unknown';
 
 const CODES = new Set<string>([
@@ -39,6 +41,7 @@ const CODES = new Set<string>([
   'concurrentRequests',
   'refusal',
   'cancelled',
+  'invalidSchema',
 ]);
 
 export class AppleAIError extends Error {

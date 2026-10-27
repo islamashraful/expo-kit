@@ -79,6 +79,22 @@ final class ModelConversation: @unchecked Sendable {
     throw ModelError.unavailable
   }
 
+  /// An answer in the shape `schemaJSON` describes (see SchemaCore), returned as JSON.
+  func respondObject(to prompt: String, schemaJSON: String, settings: GenerationSettings) async throws -> String {
+    let spec = try decodeSchema(schemaJSON)
+    #if canImport(FoundationModels)
+    if #available(iOS 26.0, macOS 26.0, *), let session = session as? LanguageModelSession {
+      let schema = try generationSchema(spec)
+      return try await run {
+        try await withModelErrors {
+          try await session.respond(to: prompt, schema: schema, options: GenerationOptions(settings)).content.jsonString
+        }
+      }
+    }
+    #endif
+    throw ModelError.unavailable
+  }
+
   /// Stops the answer being written. Its call throws ModelError.cancelled.
   func cancel() {
     lock.withLock { task }?.cancel()
@@ -130,8 +146,8 @@ private func askModel(
   settings: GenerationSettings,
   onText: (@Sendable (String) -> Void)?
 ) async throws -> String {
-  let options = GenerationOptions(temperature: settings.temperature, maximumResponseTokens: settings.maxTokens)
-  do {
+  let options = GenerationOptions(settings)
+  return try await withModelErrors {
     guard let onText else {
       return try await session.respond(to: prompt, options: options).content
     }
@@ -142,6 +158,16 @@ private func askModel(
       onText(text)
     }
     return text
+  }
+}
+
+/// Turns whatever the model throws into a ModelError.
+@available(iOS 26.0, macOS 26.0, *)
+private func withModelErrors(_ body: () async throws -> String) async throws -> String {
+  do {
+    return try await body()
+  } catch let error as ModelError {
+    throw error
   } catch is CancellationError {
     throw ModelError.cancelled
   } catch let error as LanguageModelSession.GenerationError {
@@ -149,6 +175,13 @@ private func askModel(
   } catch {
     if Task.isCancelled { throw ModelError.cancelled }
     throw ModelError(code: "unknown", message: "The model failed: \(errorChain(error as NSError))")
+  }
+}
+
+@available(iOS 26.0, macOS 26.0, *)
+extension GenerationOptions {
+  init(_ settings: GenerationSettings) {
+    self.init(temperature: settings.temperature, maximumResponseTokens: settings.maxTokens)
   }
 }
 

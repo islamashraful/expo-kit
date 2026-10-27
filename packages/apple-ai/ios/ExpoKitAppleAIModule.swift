@@ -33,6 +33,13 @@ public class ExpoKitAppleAIModule: Module {
         }
       }
 
+      // `schema` is the JSON of a SchemaSpec; the answer comes back as JSON too.
+      AsyncFunction("respondObject") { (session: ModelSessionObject, prompt: String, schema: String, options: GenerationOptionsRecord) async throws -> String in
+        try await forJS {
+          try await session.conversation.respondObject(to: prompt, schemaJSON: schema, settings: options.settings)
+        }
+      }
+
       Function("cancel") { (session: ModelSessionObject) in
         session.conversation.cancel()
       }

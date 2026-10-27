@@ -4,7 +4,7 @@ Apple's on-device language model for Expo apps, through Apple's Foundation Model
 
 The model runs on the device: free, offline, and the text never leaves the phone. It's small, so it's good for summaries, rewriting, tagging and pulling details out of text, not for general knowledge or hard reasoning.
 
-**Work in progress, not on npm yet.** So far: the availability check, text generation, conversations and streaming. Structured output comes next.
+**Work in progress, not on npm yet.** Covers the availability check, text generation, conversations, streaming and structured output. Not yet tested on a real iPhone.
 
 Needs iOS 26 on a device with Apple Intelligence turned on (iPhone 15 Pro or newer). The simulator works when the Mac has Apple Intelligence. Needs a development build (not Expo Go). On Android and web it reports `unsupportedPlatform`.
 
@@ -82,6 +82,39 @@ controller.abort(); // e.g. from a Stop button: the call rejects with code `canc
 
 `onText` and `signal` work the same on `session.respond`.
 
+## Structured output
+
+Describe the data you want, and get it back typed. The model can only answer in that shape.
+
+```ts
+import { generateObject, schema, type SchemaValue } from '@expo-kit/apple-ai';
+
+const Contact = schema.object({
+  name: schema.string(),
+  company: schema.string().optional(),
+  email: schema.string().describe('Work email, if there is one').optional(),
+  stage: schema.enum(['lead', 'customer']),
+  interests: schema.array(schema.string(), { max: 3 }),
+});
+
+type Contact = SchemaValue<typeof Contact>;
+// { name: string; stage: 'lead' | 'customer'; interests: string[]; company?: string; email?: string }
+
+const contact = await generateObject(emailText, { schema: Contact });
+```
+
+| Builder | Value |
+|---|---|
+| `schema.string()` | `string` |
+| `schema.number()` | `number` |
+| `schema.integer()` | `number`, whole numbers only |
+| `schema.boolean()` | `boolean` |
+| `schema.enum(['a', 'b'])` | `'a' \| 'b'` |
+| `schema.array(item, { min, max })` | `item[]` |
+| `schema.object({ ... })` | an object; add `.optional()` to properties the model may leave out |
+
+`.describe(text)` tells the model what belongs in a field, and often improves the answer a lot. Any schema can be the whole answer, e.g. `schema.enum(['positive', 'neutral', 'negative'])` to sort text into categories. In a conversation, use `session.respondObject(prompt, { schema })`. `signal` works as with text; streaming is for text only.
+
 ## Errors
 
 Everything throws an `AppleAIError` with a `code`:
@@ -109,6 +142,7 @@ try {
 | `concurrentRequests` | The session is still answering an earlier question |
 | `rateLimited` | Too many requests, mostly in the background |
 | `assetsUnavailable` | The model is updating or was removed. Try again later |
+| `invalidSchema` | The schema can't be used, e.g. built without `schema` |
 | `unsupportedGuide`, `decodingFailure` | Structured output failed |
 | `unknown` | Anything else. The message lists Apple's underlying errors |
 
@@ -116,9 +150,9 @@ try {
 
 - Simulator (iOS 26.5, Mac with Apple Intelligence): reports `available`
 - Simulator: generation fails inside Apple's safety check (`GenerationError -1 ← SensitiveContentAnalysisML 15 ← ModelManagerError 1001`), also with Apple's own sample code outside this package. Likely the iOS 26.5 simulator on a macOS 27 Mac. The same prompt works when run on the Mac directly
-- Mac, real model (`sh native-tests/run.sh`): single prompts, instructions, `maxTokens`, conversation memory, streaming, stopping (while streaming and while waiting), `exceededContextWindowSize` and `concurrentRequests` errors
-- Automated tests: availability reasons, errors keep their code, options reach native, sessions answer in order
-- Not tested yet: text generation on a real iPhone, including streamed text reaching JS
+- Mac, real model (`sh native-tests/run.sh`): single prompts, instructions, `maxTokens`, conversation memory, streaming, stopping (while streaming and while waiting), structured output (every builder, nested objects, list limits, optional fields, an enum or a list as the whole answer), `exceededContextWindowSize`, `concurrentRequests` and `invalidSchema` errors
+- Automated tests: availability reasons, errors keep their code, options reach native, sessions answer in order, the schema Swift receives, schema types (compile-time)
+- Not tested yet: anything that generates on a real iPhone, including streamed text and structured output reaching JS
 
 ## License
 

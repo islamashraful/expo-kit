@@ -6,6 +6,6 @@ set -e
 cd "$(dirname "$0")/.."
 OUT="${TMPDIR:-/tmp}/expo-kit-apple-ai-tests"
 xcrun swiftc -O -o "$OUT" \
-  ios/ModelCore.swift \
+  ios/ModelCore.swift ios/SchemaCore.swift \
   native-tests/Harness.swift native-tests/*Tests.swift native-tests/main.swift
 "$OUT"

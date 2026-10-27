@@ -24,6 +24,8 @@ declare class ModelSession extends SharedObject<NativeSessionEvents> {
   readonly isResponding: boolean;
   respond(prompt: string, options: NativeGenerationOptions): Promise<string>;
   streamResponse(prompt: string, options: NativeGenerationOptions): Promise<string>;
+  /** `schema` is the JSON of a SchemaSpec. The answer comes back as JSON. */
+  respondObject(prompt: string, schema: string, options: NativeGenerationOptions): Promise<string>;
   /** Stops the answer being written. Its call rejects with code `cancelled`. */
   cancel(): void;
 }

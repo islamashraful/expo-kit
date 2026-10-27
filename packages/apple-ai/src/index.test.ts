@@ -3,7 +3,9 @@ import { beforeEach, describe, expect, mock, test } from 'bun:test';
 import type { NativeAvailability, NativeGenerationOptions } from './native';
 
 let status: NativeAvailability = 'available';
-const calls: { prompt: string; options: NativeGenerationOptions; streamed: boolean }[] = [];
+const calls: { prompt: string; options: NativeGenerationOptions; streamed: boolean; schema?: unknown }[] = [];
+// What respondObject answers, as the JSON Swift would send.
+let objectAnswer = '{}';
 const sessions: FakeSession[] = [];
 let nativeError: unknown = null;
 // When set, answers wait until cancel() is called, like a long answer being stopped.
@@ -26,6 +28,10 @@ class FakeSession {
     calls.push({ prompt, options, streamed: true });
     for (const text of ['A', 'An', 'An answer']) this.listeners.forEach((listener) => listener(text));
     return this.answer();
+  }
+  async respondObject(prompt: string, schema: string, options: NativeGenerationOptions) {
+    calls.push({ prompt, options, streamed: false, schema: JSON.parse(schema) });
+    return this.answer().then(() => objectAnswer);
   }
   cancel() {
     this.stop?.();
@@ -52,7 +58,8 @@ mock.module('react-native', () => ({ Platform: platform }));
 mock.module('@expo-kit/core', () => ({ useOnForeground: () => {} }));
 mock.module('expo', () => ({ requireOptionalNativeModule: () => fakeModule, SharedObject: class {} }));
 
-const { AppleAIError, createSession, generateText, getAppleAIAvailability, isAppleAIAvailable } = await import('./index');
+const { AppleAIError, createSession, generateObject, generateText, getAppleAIAvailability, isAppleAIAvailable, schema } =
+  await import('./index');
 
 function nativeException(code: string, message: string) {
   return Object.assign(new Error(message), { code });
@@ -65,6 +72,7 @@ beforeEach(() => {
   sessions.length = 0;
   nativeError = null;
   hang = false;
+  objectAnswer = '{}';
 });
 
 describe('getAppleAIAvailability', () => {
@@ -169,5 +177,71 @@ describe('createSession', () => {
   test('maps errors from respond', async () => {
     nativeError = nativeException('guardrailViolation', 'Blocked');
     await expect(createSession().respond('Hi')).rejects.toMatchObject({ code: 'guardrailViolation' });
+  });
+});
+
+describe('schema', () => {
+  test('builds the spec Swift reads', () => {
+    const Contact = schema.object({
+      name: schema.string(),
+      email: schema.string().describe('Work email').optional(),
+      phone: schema.string().optional().describe('Only if given'),
+      stage: schema.enum(['lead', 'customer']),
+      tags: schema.array(schema.integer(), { min: 1, max: 3 }).describe('Scores'),
+    }).describe('A contact');
+
+    expect(Contact.spec).toEqual({
+      kind: 'object',
+      description: 'A contact',
+      properties: [
+        { name: 'name', schema: { kind: 'string' }, optional: false },
+        { name: 'email', schema: { kind: 'string', description: 'Work email' }, optional: true },
+        { name: 'phone', schema: { kind: 'string', description: 'Only if given' }, optional: true },
+        { name: 'stage', schema: { kind: 'enum', choices: ['lead', 'customer'] }, optional: false },
+        {
+          name: 'tags',
+          schema: { kind: 'array', items: { kind: 'integer' }, minItems: 1, maxItems: 3, description: 'Scores' },
+          optional: false,
+        },
+      ],
+    });
+  });
+
+  test('describe and optional return new schemas', () => {
+    const base = schema.string();
+    base.describe('x');
+    base.optional();
+    expect(base.spec).toEqual({ kind: 'string' });
+    expect(base.isOptional).toBe(false);
+  });
+});
+
+describe('generateObject', () => {
+  const Contact = schema.object({ name: schema.string(), stage: schema.enum(['lead', 'customer']) });
+
+  test('sends the schema as JSON and parses the answer', async () => {
+    objectAnswer = '{"name":"Jane","stage":"lead"}';
+    const contact = await generateObject('Jane, new lead', { schema: Contact, instructions: 'Extract.', temperature: 0 });
+    expect(contact).toEqual({ name: 'Jane', stage: 'lead' });
+    expect(calls).toEqual([{ prompt: 'Jane, new lead', options: { temperature: 0 }, streamed: false, schema: Contact.spec }]);
+    expect(sessions.map((s) => [s.options, s.released])).toEqual([[{ instructions: 'Extract.' }, true]]);
+  });
+
+  test('works inside a conversation', async () => {
+    objectAnswer = '"positive"';
+    const session = createSession();
+    expect(await session.respondObject('Great app!', { schema: schema.enum(['positive', 'negative']) })).toBe('positive');
+  });
+
+  test('keeps the native error code and can be cancelled', async () => {
+    nativeError = nativeException('invalidSchema', 'Bad');
+    await expect(generateObject('Hi', { schema: Contact })).rejects.toMatchObject({ code: 'invalidSchema' });
+
+    nativeError = null;
+    hang = true;
+    const controller = new AbortController();
+    const answer = generateObject('Hi', { schema: Contact, signal: controller.signal });
+    controller.abort();
+    await expect(answer).rejects.toMatchObject({ code: 'cancelled' });
   });
 });

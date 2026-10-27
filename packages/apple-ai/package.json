@@ -36,6 +36,7 @@
     "build",
     "src",
     "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts",
     "ios",
     "expo-module.config.json"
   ],

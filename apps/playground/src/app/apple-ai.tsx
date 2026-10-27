@@ -2,7 +2,9 @@ import { Host, List, ListItem, Text, TextInput } from '@expo/ui';
 import {
   AppleAIError,
   createSession,
+  generateObject,
   generateText,
+  schema,
   useAppleAIAvailability,
   type AppleAISession,
   type GenerationOptions,
@@ -10,6 +12,16 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 const INSTRUCTIONS = 'Answer in one or two short sentences.';
+
+const CONTACT_TEXT = "Hi, I'm Jane Doe from Acme Corp. Reach me at jane@acme.test. We'd like to buy 40 licenses.";
+const Contact = schema.object({
+  name: schema.string(),
+  company: schema.string(),
+  email: schema.string().describe('Email address'),
+  phone: schema.string().describe('Phone number, only if given').optional(),
+  stage: schema.enum(['lead', 'customer']).describe('customer once they bought'),
+  licenses: schema.integer().describe('Number of licenses they asked about').optional(),
+});
 
 type Result = { text: string; ms?: number } | { error: string };
 
@@ -75,6 +87,19 @@ export default function AppleAIScreen() {
           onPress={busy ? undefined : askInConversation}
         >
           <Text>{busy ? 'Thinking…' : 'Ask in conversation'}</Text>
+        </ListItem>
+        <ListItem
+          supportingText={`Structured output from: "${CONTACT_TEXT}"`}
+          onPress={
+            busy
+              ? undefined
+              : () =>
+                  run(async ({ signal }) =>
+                    JSON.stringify(await generateObject(CONTACT_TEXT, { schema: Contact, signal }), null, 2),
+                  )
+          }
+        >
+          <Text>{busy ? 'Thinking…' : 'Extract contact'}</Text>
         </ListItem>
         {busy ? (
           <ListItem onPress={() => stop.current?.abort()}>

@@ -32,6 +32,18 @@ Simulator and iPhone checks use the playground's apple-ai screen in a developmen
 | Stop while streaming | Tap Stop during an answer | `cancelled` error | ✅ | ⬜ | ⬜ |
 | Use after Stop | Stop, then ask in conversation again | A normal answer | ✅ | ⬜ | ⬜ |
 
+## Structured output
+
+| Case | Steps | Expected | Mac | Simulator | iPhone |
+|---|---|---|---|---|---|
+| Extract a contact | Tap Extract contact | Name, company, email and stage from the text; no phone | ✅ | ⬜ | ⬜ |
+| Every value kind | Integer, number, boolean, nested object, list | Values have the right types | ✅ | – | – |
+| List limits | `max: 2` with four candidates in the text | At most two items | ✅ | – | – |
+| Enum as the answer | Sort a review into positive, neutral or negative | One of the choices | ✅ | – | – |
+| List as the answer | A shopping list of objects, 2 to 5 items | A list within the limits | ✅ | – | – |
+| Invalid schema | Unknown kind, enum without choices | `invalidSchema` error | ✅ | – | – |
+| Stop | Abort while extracting | `cancelled` error | ✅ | ⬜ | ⬜ |
+
 ## Known issues
 
 - **Simulator generation fails** inside Apple's safety check: `GenerationError -1 ← SensitiveContentAnalysisML 15 ← ModelManagerError 1001`. Reproduced with Apple's API directly, outside this package (iOS 26.5 simulator, Xcode 26.6, macOS 27). Recheck with a simulator that matches the macOS version.
