@@ -1,12 +1,19 @@
 import { getAppleAIAvailability } from './availability';
 import { AppleAIError, toAppleAIError } from './errors';
-import { nativeModule } from './native';
+import { nativeModule, type NativeSession } from './native';
 
 export type GenerationOptions = {
   /** 0 to 2. Lower is more predictable, higher is more varied. Apple picks a default when unset. */
   temperature?: number;
   /** Stops the answer after about this many tokens (roughly ¾ of a word each). */
   maxTokens?: number;
+  /**
+   * Streams the answer: called with the whole answer so far each time it grows,
+   * so it can go straight into state. The promise still resolves with the full answer.
+   */
+  onText?: (text: string) => void;
+  /** Aborting stops the answer. The call then rejects with code `cancelled`. */
+  signal?: AbortSignal;
 };
 
 export type GenerateTextOptions = GenerationOptions & {
@@ -33,11 +40,12 @@ export type AppleAISession = {
  * Throws an AppleAIError; `code` is `unavailable` when the model can't be used.
  */
 export async function generateText(prompt: string, options: GenerateTextOptions = {}): Promise<string> {
-  const model = requireModel();
+  const { instructions, ...generationOptions } = options;
+  const session = new (requireModel().ModelSession)({ instructions });
   try {
-    return await model.generateText(prompt, options);
-  } catch (error) {
-    throw toAppleAIError(error);
+    return await ask(session, prompt, generationOptions);
+  } finally {
+    session.release();
   }
 }
 
@@ -48,13 +56,7 @@ export async function generateText(prompt: string, options: GenerateTextOptions 
 export function createSession(options: SessionOptions = {}): AppleAISession {
   const session = new (requireModel().ModelSession)(options);
   return {
-    async respond(prompt, generationOptions = {}) {
-      try {
-        return await session.respond(prompt, generationOptions);
-      } catch (error) {
-        throw toAppleAIError(error);
-      }
-    },
+    respond: (prompt, generationOptions = {}) => ask(session, prompt, generationOptions),
     get isResponding() {
       return session.isResponding;
     },
@@ -62,6 +64,21 @@ export function createSession(options: SessionOptions = {}): AppleAISession {
       session.release();
     },
   };
+}
+
+async function ask(session: NativeSession, prompt: string, { onText, signal, ...options }: GenerationOptions) {
+  if (signal?.aborted) throw new AppleAIError('cancelled', 'The answer was cancelled.');
+  const cancel = () => session.cancel();
+  signal?.addEventListener('abort', cancel);
+  const subscription = onText ? session.addListener('text', onText) : null;
+  try {
+    return await (onText ? session.streamResponse(prompt, options) : session.respond(prompt, options));
+  } catch (error) {
+    throw toAppleAIError(error);
+  } finally {
+    signal?.removeEventListener('abort', cancel);
+    subscription?.remove();
+  }
 }
 
 function requireModel() {

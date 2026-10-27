@@ -7,8 +7,6 @@ struct SessionOptionsRecord: Record {
 }
 
 struct GenerationOptionsRecord: Record {
-  /// Only used by one-off calls. A session gets its instructions once, when it's created.
-  @Field var instructions: String?
   @Field var temperature: Double?
   @Field var maxTokens: Int?
 

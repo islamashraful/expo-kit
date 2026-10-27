@@ -4,7 +4,7 @@ Apple's on-device language model for Expo apps, through Apple's Foundation Model
 
 The model runs on the device: free, offline, and the text never leaves the phone. It's small, so it's good for summaries, rewriting, tagging and pulling details out of text, not for general knowledge or hard reasoning.
 
-**Work in progress, not on npm yet.** So far: the availability check, text generation and conversations. Streaming and structured output come next.
+**Work in progress, not on npm yet.** So far: the availability check, text generation, conversations and streaming. Structured output comes next.
 
 Needs iOS 26 on a device with Apple Intelligence turned on (iPhone 15 Pro or newer). The simulator works when the Mac has Apple Intelligence. Needs a development build (not Expo Go). On Android and web it reports `unsupportedPlatform`.
 
@@ -67,6 +67,21 @@ session.release(); // when done
 
 One question at a time per session. A long conversation eventually fails with `exceededContextWindowSize`; start a new session then.
 
+## Streaming and stopping
+
+```tsx
+const controller = new AbortController();
+
+const answer = await generateText(prompt, {
+  onText: (text) => setAnswer(text), // the whole answer so far, each time it grows
+  signal: controller.signal,
+});
+
+controller.abort(); // e.g. from a Stop button: the call rejects with code `cancelled`
+```
+
+`onText` and `signal` work the same on `session.respond`.
+
 ## Errors
 
 Everything throws an `AppleAIError` with a `code`:
@@ -89,6 +104,7 @@ try {
 | `exceededContextWindowSize` | Prompt, instructions and conversation are too long |
 | `guardrailViolation` | Apple's safety check blocked the prompt or the answer |
 | `refusal` | The model declined to answer |
+| `cancelled` | Stopped with `signal` |
 | `unsupportedLanguageOrLocale` | The model doesn't support this language |
 | `concurrentRequests` | The session is still answering an earlier question |
 | `rateLimited` | Too many requests, mostly in the background |
@@ -100,9 +116,9 @@ try {
 
 - Simulator (iOS 26.5, Mac with Apple Intelligence): reports `available`
 - Simulator: generation fails inside Apple's safety check (`GenerationError -1 ← SensitiveContentAnalysisML 15 ← ModelManagerError 1001`), also with Apple's own sample code outside this package. Likely the iOS 26.5 simulator on a macOS 27 Mac. The same prompt works when run on the Mac directly
-- Mac, real model (`sh native-tests/run.sh`): single prompts, instructions, `maxTokens`, conversation memory, `exceededContextWindowSize` and `concurrentRequests` errors
+- Mac, real model (`sh native-tests/run.sh`): single prompts, instructions, `maxTokens`, conversation memory, streaming, stopping (while streaming and while waiting), `exceededContextWindowSize` and `concurrentRequests` errors
 - Automated tests: availability reasons, errors keep their code, options reach native, sessions answer in order
-- Not tested yet: text generation on a real iPhone
+- Not tested yet: text generation on a real iPhone, including streamed text reaching JS
 
 ## License
 

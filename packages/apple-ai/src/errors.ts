@@ -9,6 +9,7 @@ import type { UnavailableReason } from './availability';
  * - `rateLimited`: too many requests, mostly while the app is in the background.
  * - `concurrentRequests`: the session is still answering an earlier prompt.
  * - `refusal`: the model declined to answer.
+ * - `cancelled`: stopped with the `signal` option.
  * - `unsupportedGuide`, `decodingFailure`: structured output failed.
  * - `unknown`: anything else, including errors added by a newer iOS.
  */
@@ -23,6 +24,7 @@ export type AppleAIErrorCode =
   | 'rateLimited'
   | 'concurrentRequests'
   | 'refusal'
+  | 'cancelled'
   | 'unknown';
 
 const CODES = new Set<string>([
@@ -36,6 +38,7 @@ const CODES = new Set<string>([
   'rateLimited',
   'concurrentRequests',
   'refusal',
+  'cancelled',
 ]);
 
 export class AppleAIError extends Error {

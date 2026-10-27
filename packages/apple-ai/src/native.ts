@@ -9,21 +9,29 @@ export type NativeAvailability =
   | 'unknown';
 
 export type NativeGenerationOptions = {
-  instructions?: string;
   temperature?: number;
   maxTokens?: number;
 };
 
+export type NativeSessionEvents = {
+  /** The answer so far, each time it grows during streamResponse. */
+  text: (text: string) => void;
+};
+
 /** A conversation with the model. Remembers earlier prompts and answers. */
-declare class ModelSession extends SharedObject {
+declare class ModelSession extends SharedObject<NativeSessionEvents> {
   constructor(options: { instructions?: string });
   readonly isResponding: boolean;
   respond(prompt: string, options: NativeGenerationOptions): Promise<string>;
+  streamResponse(prompt: string, options: NativeGenerationOptions): Promise<string>;
+  /** Stops the answer being written. Its call rejects with code `cancelled`. */
+  cancel(): void;
 }
+
+export type NativeSession = ModelSession;
 
 declare class ExpoKitAppleAIModule extends NativeModule {
   availability(): NativeAvailability;
-  generateText(prompt: string, options: NativeGenerationOptions): Promise<string>;
   ModelSession: typeof ModelSession;
 }
 

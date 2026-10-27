@@ -37,12 +37,16 @@ struct ModelError: Error, Equatable {
   let message: String
 
   static let unavailable = ModelError(code: "unavailable", message: "The on-device model needs iOS 26.")
+  static let cancelled = ModelError(code: "cancelled", message: "The answer was cancelled.")
 }
 
 /// A conversation with the model. Remembers earlier prompts and answers.
-final class ModelConversation {
+final class ModelConversation: @unchecked Sendable {
   // A LanguageModelSession. Stored as Any so this class also exists below iOS 26.
   private let session: Any
+  // The answer being written, so cancel() can stop it. Guarded by `lock`.
+  private var task: Task<String, Error>?
+  private let lock = NSLock()
 
   init(instructions: String?) throws {
     #if canImport(FoundationModels)
@@ -63,13 +67,39 @@ final class ModelConversation {
     return false
   }
 
-  func respond(to prompt: String, settings: GenerationSettings) async throws -> String {
+  /// The whole answer at once. With `onText`, the answer so far is passed in each time it grows.
+  func respond(to prompt: String, settings: GenerationSettings, onText: (@Sendable (String) -> Void)? = nil) async throws -> String {
     #if canImport(FoundationModels)
     if #available(iOS 26.0, macOS 26.0, *), let session = session as? LanguageModelSession {
-      return try await askModel(session, prompt: prompt, settings: settings)
+      return try await run {
+        try await askModel(session, prompt: prompt, settings: settings, onText: onText)
+      }
     }
     #endif
     throw ModelError.unavailable
+  }
+
+  /// Stops the answer being written. Its call throws ModelError.cancelled.
+  func cancel() {
+    lock.withLock { task }?.cancel()
+  }
+
+  private func run(_ body: @escaping @Sendable () async throws -> String) async throws -> String {
+    let task = Task { try await body() }
+    lock.withLock { self.task = task }
+    defer {
+      lock.withLock {
+        if self.task == task { self.task = nil }
+      }
+    }
+    let text = try await withTaskCancellationHandler {
+      try await task.value
+    } onCancel: {
+      task.cancel()
+    }
+    // A cancelled stream can end quietly instead of throwing.
+    if task.isCancelled { throw ModelError.cancelled }
+    return text
   }
 }
 
@@ -94,13 +124,30 @@ func errorChain(_ error: NSError) -> String {
 
 #if canImport(FoundationModels)
 @available(iOS 26.0, macOS 26.0, *)
-private func askModel(_ session: LanguageModelSession, prompt: String, settings: GenerationSettings) async throws -> String {
+private func askModel(
+  _ session: LanguageModelSession,
+  prompt: String,
+  settings: GenerationSettings,
+  onText: (@Sendable (String) -> Void)?
+) async throws -> String {
   let options = GenerationOptions(temperature: settings.temperature, maximumResponseTokens: settings.maxTokens)
   do {
-    return try await session.respond(to: prompt, options: options).content
+    guard let onText else {
+      return try await session.respond(to: prompt, options: options).content
+    }
+    var text = ""
+    // Each snapshot is the whole answer so far, not just the new part.
+    for try await snapshot in session.streamResponse(to: prompt, options: options) {
+      text = snapshot.content
+      onText(text)
+    }
+    return text
+  } catch is CancellationError {
+    throw ModelError.cancelled
   } catch let error as LanguageModelSession.GenerationError {
     throw modelError(error)
   } catch {
+    if Task.isCancelled { throw ModelError.cancelled }
     throw ModelError(code: "unknown", message: "The model failed: \(errorChain(error as NSError))")
   }
 }

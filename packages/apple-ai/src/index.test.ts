@@ -3,32 +3,48 @@ import { beforeEach, describe, expect, mock, test } from 'bun:test';
 import type { NativeAvailability, NativeGenerationOptions } from './native';
 
 let status: NativeAvailability = 'available';
-const calls: { prompt: string; options: NativeGenerationOptions }[] = [];
+const calls: { prompt: string; options: NativeGenerationOptions; streamed: boolean }[] = [];
+const sessions: FakeSession[] = [];
 let nativeError: unknown = null;
-let released = 0;
+// When set, answers wait until cancel() is called, like a long answer being stopped.
+let hang = false;
 
 class FakeSession {
-  constructor(readonly options: { instructions?: string }) {}
   isResponding = false;
+  released = false;
+  listeners: ((text: string) => void)[] = [];
+  private stop: (() => void) | null = null;
+
+  constructor(readonly options: { instructions?: string }) {
+    sessions.push(this);
+  }
   async respond(prompt: string, options: NativeGenerationOptions) {
-    calls.push({ prompt, options });
-    if (nativeError) throw nativeError;
-    return `answer ${calls.length}`;
+    calls.push({ prompt, options, streamed: false });
+    return this.answer();
+  }
+  async streamResponse(prompt: string, options: NativeGenerationOptions) {
+    calls.push({ prompt, options, streamed: true });
+    for (const text of ['A', 'An', 'An answer']) this.listeners.forEach((listener) => listener(text));
+    return this.answer();
+  }
+  cancel() {
+    this.stop?.();
+  }
+  addListener(_event: 'text', listener: (text: string) => void) {
+    this.listeners.push(listener);
+    return { remove: () => (this.listeners = this.listeners.filter((l) => l !== listener)) };
   }
   release() {
-    released += 1;
+    this.released = true;
+  }
+  private answer() {
+    if (nativeError) return Promise.reject(nativeError);
+    if (hang) return new Promise<string>((_, reject) => (this.stop = () => reject(nativeException('cancelled', 'Cancelled'))));
+    return Promise.resolve(`answer ${calls.length}`);
   }
 }
 
-const fakeModule = {
-  availability: () => status,
-  async generateText(prompt: string, options: NativeGenerationOptions) {
-    calls.push({ prompt, options });
-    if (nativeError) throw nativeError;
-    return 'answer';
-  },
-  ModelSession: FakeSession,
-};
+const fakeModule = { availability: () => status, ModelSession: FakeSession };
 
 const platform = { OS: 'ios' };
 
@@ -46,8 +62,9 @@ beforeEach(() => {
   platform.OS = 'ios';
   status = 'available';
   calls.length = 0;
+  sessions.length = 0;
   nativeError = null;
-  released = 0;
+  hang = false;
 });
 
 describe('getAppleAIAvailability', () => {
@@ -73,10 +90,17 @@ describe('getAppleAIAvailability', () => {
 });
 
 describe('generateText', () => {
-  test('passes the prompt and options to native', async () => {
+  test('asks a fresh session and releases it', async () => {
     const answer = await generateText('Hi', { instructions: 'Be short.', temperature: 0.2, maxTokens: 50 });
-    expect(answer).toBe('answer');
-    expect(calls).toEqual([{ prompt: 'Hi', options: { instructions: 'Be short.', temperature: 0.2, maxTokens: 50 } }]);
+    expect(answer).toBe('answer 1');
+    expect(calls).toEqual([{ prompt: 'Hi', options: { temperature: 0.2, maxTokens: 50 }, streamed: false }]);
+    expect(sessions.map((s) => [s.options, s.released])).toEqual([[{ instructions: 'Be short.' }, true]]);
+  });
+
+  test('releases the session after an error too', async () => {
+    nativeError = nativeException('refusal', 'No');
+    await generateText('Hi').catch(() => {});
+    expect(sessions[0]!.released).toBe(true);
   });
 
   test('throws unavailable with the reason, without asking native', async () => {
@@ -98,6 +122,33 @@ describe('generateText', () => {
   });
 });
 
+describe('streaming and cancelling', () => {
+  test('onText gets the answer so far, then the listener is removed', async () => {
+    const texts: string[] = [];
+    const session = createSession();
+    const answer = await session.respond('Hi', { onText: (text) => texts.push(text), temperature: 1 });
+    expect(texts).toEqual(['A', 'An', 'An answer']);
+    expect(answer).toBe('answer 1');
+    expect(calls).toEqual([{ prompt: 'Hi', options: { temperature: 1 }, streamed: true }]);
+    expect(sessions[0]!.listeners).toEqual([]);
+  });
+
+  test('aborting the signal cancels the native answer', async () => {
+    hang = true;
+    const controller = new AbortController();
+    const answer = createSession().respond('Hi', { signal: controller.signal });
+    controller.abort();
+    await expect(answer).rejects.toMatchObject({ code: 'cancelled' });
+  });
+
+  test('an already aborted signal never reaches native', async () => {
+    const controller = new AbortController();
+    controller.abort();
+    await expect(generateText('Hi', { signal: controller.signal })).rejects.toMatchObject({ code: 'cancelled' });
+    expect(calls).toEqual([]);
+  });
+});
+
 describe('createSession', () => {
   test('answers in order and can be released', async () => {
     const session = createSession({ instructions: 'Be short.' });
@@ -107,7 +158,7 @@ describe('createSession', () => {
     expect(calls[1]!.options).toEqual({ temperature: 1 });
     expect(session.isResponding).toBe(false);
     session.release();
-    expect(released).toBe(1);
+    expect(sessions[0]!.released).toBe(true);
   });
 
   test('throws unavailable when the model can not be used', () => {

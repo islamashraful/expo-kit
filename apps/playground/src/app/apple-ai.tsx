@@ -5,12 +5,13 @@ import {
   generateText,
   useAppleAIAvailability,
   type AppleAISession,
+  type GenerationOptions,
 } from '@expo-kit/apple-ai';
 import { useEffect, useRef, useState } from 'react';
 
 const INSTRUCTIONS = 'Answer in one or two short sentences.';
 
-type Result = { text: string; ms: number } | { error: string };
+type Result = { text: string; ms?: number } | { error: string };
 
 export default function AppleAIScreen() {
   const availability = useAppleAIAvailability();
@@ -19,14 +20,18 @@ export default function AppleAIScreen() {
   const [busy, setBusy] = useState(false);
   const [turns, setTurns] = useState(0);
   const session = useRef<AppleAISession | null>(null);
+  const stop = useRef<AbortController | null>(null);
 
   useEffect(() => () => session.current?.release(), []);
 
-  async function run(ask: () => Promise<string>) {
+  // Streams into the result as the answer is written; Stop aborts it.
+  async function run(ask: (options: GenerationOptions) => Promise<string>) {
     setBusy(true);
+    stop.current = new AbortController();
     const started = Date.now();
     try {
-      setResult({ text: await ask(), ms: Date.now() - started });
+      const text = await ask({ onText: (text) => setResult({ text }), signal: stop.current.signal });
+      setResult({ text, ms: Date.now() - started });
     } catch (error) {
       setResult({ error: error instanceof AppleAIError ? `${error.code}: ${error.message}` : String(error) });
     } finally {
@@ -35,9 +40,9 @@ export default function AppleAIScreen() {
   }
 
   function askInConversation() {
-    return run(async () => {
+    return run(async (options) => {
       session.current ??= createSession({ instructions: INSTRUCTIONS });
-      const answer = await session.current.respond(prompt);
+      const answer = await session.current.respond(prompt, options);
       setTurns((n) => n + 1);
       return answer;
     });
@@ -62,7 +67,7 @@ export default function AppleAIScreen() {
         <ListItem supportingText={`Instructions: "${INSTRUCTIONS}"`}>
           <TextInput defaultValue={prompt} onChangeText={setPrompt} placeholder="Prompt" multiline />
         </ListItem>
-        <ListItem supportingText="One prompt, no memory." onPress={busy ? undefined : () => run(() => generateText(prompt, { instructions: INSTRUCTIONS }))}>
+        <ListItem supportingText="One prompt, no memory." onPress={busy ? undefined : () => run((options) => generateText(prompt, { instructions: INSTRUCTIONS, ...options }))}>
           <Text>{busy ? 'Thinking…' : 'Generate'}</Text>
         </ListItem>
         <ListItem
@@ -71,12 +76,18 @@ export default function AppleAIScreen() {
         >
           <Text>{busy ? 'Thinking…' : 'Ask in conversation'}</Text>
         </ListItem>
-        <ListItem onPress={newConversation}>
-          <Text>New conversation</Text>
-        </ListItem>
+        {busy ? (
+          <ListItem onPress={() => stop.current?.abort()}>
+            <Text>Stop</Text>
+          </ListItem>
+        ) : (
+          <ListItem onPress={newConversation}>
+            <Text>New conversation</Text>
+          </ListItem>
+        )}
 
         {result ? (
-          <ListItem supportingText={'error' in result ? 'Error' : `${result.ms} ms`}>
+          <ListItem supportingText={'error' in result ? 'Error' : result.ms === undefined ? 'Writing…' : `${result.ms} ms`}>
             <Text>{'error' in result ? result.error : result.text}</Text>
           </ListItem>
         ) : null}

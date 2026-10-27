@@ -28,6 +28,9 @@ Simulator and iPhone checks use the playground's apple-ai screen in a developmen
 | Model unavailable | Apple Intelligence off, tap Generate | `unavailable` error with the reason | – | – | ⬜ |
 | Prompt too long | Paste a very long text | `exceededContextWindowSize` error | ✅ | ⬜ | ⬜ |
 | Busy session | Ask again before the answer is back | `concurrentRequests` error | ✅ | – | – |
+| Streaming | Tap Generate | The answer appears piece by piece | ✅ | ⬜ | ⬜ |
+| Stop while streaming | Tap Stop during an answer | `cancelled` error | ✅ | ⬜ | ⬜ |
+| Use after Stop | Stop, then ask in conversation again | A normal answer | ✅ | ⬜ | ⬜ |
 
 ## Known issues
 
