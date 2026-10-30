@@ -130,7 +130,6 @@ describe('createCloudSync', () => {
     await sync.start();
     expect(calls).toEqual(['Venue.save:v1', 'Venue.save:v2']);
     expect(engine.inbox.map((c) => c.id)).toEqual(['s1']);
-    expect(reported.some((r) => (r.context as { fn: string }).fn === 'cloudSync.apply')).toBe(true);
 
     fail = false;
     engine.emit('changes');
@@ -164,6 +163,54 @@ describe('createCloudSync', () => {
     engine.inbox = [change('Shift', 's1', 'save', { date: 1, tips: 1, venue: 'v1' })];
     await sync.start();
     expect(engine.inbox.map((c) => c.id)).toEqual(['s1']);
+  });
+
+  test('a change that fails while syncing but applies later is never reported', async () => {
+    const venues = new Set<string>();
+    const { engine, sync, calls } = setup({
+      shiftSave: (records) => {
+        for (const r of records as { venue: string }[]) if (!venues.has(r.venue)) throw new Error('FOREIGN KEY constraint failed');
+      },
+      venueSave: (records) => (records as { id: string }[]).forEach((r) => venues.add(r.id)),
+    });
+    await sync.start();
+    engine.emit('status', { ...engine.status(), syncing: true });
+
+    // The shift arrives in one batch, its venue in the next.
+    engine.inbox = [change('Shift', 's1', 'save', { date: 1, tips: 1, venue: 'v1' })];
+    engine.emit('changes');
+    await flush();
+    engine.inbox.push(change('Venue', 'v1', 'save', { name: 'Bar' }));
+    engine.emit('changes');
+    await flush();
+    await flush();
+    engine.emit('status', { ...engine.status(), syncing: false });
+    await flush();
+    await flush();
+
+    expect(calls).toEqual(['Venue.save:v1', 'Shift.save:s1']);
+    expect(engine.inbox).toEqual([]);
+    expect(reported).toEqual([]);
+  });
+
+  test('a change still failing after a sync finished is reported once', async () => {
+    const { engine, sync } = setup({ shiftSave: () => { throw new Error('FOREIGN KEY constraint failed'); } });
+    engine.inbox = [change('Shift', 's1', 'save', { date: 1, tips: 1, venue: 'v1' }), change('Shift', 's2', 'save', { date: 1, tips: 1, venue: 'v1' })];
+    await sync.start();
+    engine.emit('status', { ...engine.status(), syncing: true });
+    engine.emit('changes');
+    await flush();
+    expect(reported).toEqual([]);
+
+    for (let round = 0; round < 2; round += 1) {
+      engine.emit('status', { ...engine.status(), syncing: true });
+      engine.emit('status', { ...engine.status(), syncing: false });
+      await flush();
+      await flush();
+    }
+    expect(reported.length).toBe(1);
+    expect(reported[0]!.context).toEqual({ fn: 'cloudSync.apply', type: 'Shift', operation: 'save' });
+    expect(engine.inbox.map((c) => c.id)).toEqual(['s1', 's2']);
   });
 
   test('changes for a type not in the schema are skipped and acked', async () => {

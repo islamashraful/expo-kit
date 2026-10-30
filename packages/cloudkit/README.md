@@ -86,7 +86,7 @@ export const sync = createCloudSync({
 await sync.start();
 ```
 
-`apply` handlers may throw (e.g. a foreign key isn't there yet): that group is retried after the others, and nothing is lost.
+`apply` handlers may throw (e.g. a foreign key isn't there yet): that group is retried after the others, and nothing is lost. Only a change that still fails after a sync finished is sent to the error reporter, once.
 
 ## 3. Tell it about your own writes
 

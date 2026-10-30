@@ -104,6 +104,9 @@ export function createCloudSyncWithEngine<S extends CloudSchema>(
   const subscriptions: { remove(): void }[] = [];
   let draining: Promise<void> | null = null;
   let drainAgain = false;
+  // Latest apply error per failed change. Reported only if it still fails once a sync has finished.
+  const failures = new Map<number, { error: unknown; context: Record<string, unknown> }>();
+  const reportedSequences = new Set<number>();
 
   try {
     engine = makeEngine({ containerId: options.container, zoneName: zone, conflict, schema: toSchemaSpec(schema) });
@@ -159,6 +162,22 @@ export function createCloudSyncWithEngine<S extends CloudSchema>(
     return draining;
   }
 
+  /**
+   * Reports changes that still can't be applied after a sync finished. While a sync runs, a
+   * failure is usually a record whose link hasn't arrived yet, so it isn't an error. Each change
+   * is reported once per app run, and changes that failed together are one report.
+   */
+  function reportStuckChanges() {
+    const reportedErrors = new Set<unknown>();
+    for (const [sequence, failure] of failures) {
+      if (reportedSequences.has(sequence)) continue;
+      reportedSequences.add(sequence);
+      if (reportedErrors.has(failure.error)) continue;
+      reportedErrors.add(failure.error);
+      reportError(failure.error, failure.context);
+    }
+  }
+
   /** Groups consecutive changes of the same type and operation, keeping their order. */
   async function applyInOrder(changes: NativeChange[]): Promise<{ done: number[]; failedSequences: number[] }> {
     const done: number[] = [];
@@ -187,8 +206,10 @@ export function createCloudSyncWithEngine<S extends CloudSchema>(
           await handler.save(records);
         }
         done.push(...group.map((change) => change.sequence));
+        group.forEach((change) => failures.delete(change.sequence));
       } catch (error) {
-        reportError(error, { fn: 'cloudSync.apply', type: first.type, operation: first.operation });
+        const context = { fn: 'cloudSync.apply', type: first.type, operation: first.operation };
+        group.forEach((change) => failures.set(change.sequence, { error, context }));
         failedSequences.push(...group.map((change) => change.sequence));
       }
     }
@@ -198,9 +219,17 @@ export function createCloudSyncWithEngine<S extends CloudSchema>(
   if (engine) {
     const current = engine;
     subscriptions.push(
-      current.addListener('status', (next) => setStatus(toStatus(next, true))),
+      current.addListener('status', (next) => {
+        const finished = status.syncing && !next.syncing;
+        setStatus(toStatus(next, true));
+        // Everything from this sync is in: one last try, then report what still fails.
+        if (finished) void drain().then(reportStuckChanges);
+      }),
       current.addListener('changes', () => void drain()),
       current.addListener('account', (event) => {
+        // Sync state was reset, so the old failed changes are gone.
+        failures.clear();
+        reportedSequences.clear();
         try {
           options.onAccountChange?.(event);
         } catch (error) {
