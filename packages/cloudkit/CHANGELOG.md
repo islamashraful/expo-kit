@@ -1,5 +1,11 @@
 # @expo-kit/cloudkit
 
+## 58.0.1
+
+### Patch Changes
+
+- fed31da: Report an `apply` error only if the change still fails after a sync finished, once, instead of on every retry while records are still arriving.
+
 ## 58.0.0
 
 ### Major Changes
