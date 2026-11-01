@@ -18,6 +18,8 @@ export type AnalyticsOptions = {
   options?: Omit<PostHogOptions, 'host'>;
 };
 
+type BeforeSendFn = Extract<NonNullable<PostHogOptions['before_send']>, (...args: never[]) => unknown>;
+
 let client: PostHog | null = null;
 let appName: string | null = null;
 
@@ -34,9 +36,20 @@ export function initAnalytics({
 }: AnalyticsOptions) {
   if (client || !apiKey || (__DEV__ && !enableInDev)) return;
   appName = name ?? null;
-  client = new PostHog(apiKey, { host, ...options });
+  const base = baseProperties();
   // Added to every event, so dashboards can split by app and environment.
-  void client.register(baseProperties());
+  // before_send also covers events sent before register() has finished, like PostHog's own startup events.
+  const addBase: BeforeSendFn = (event) => {
+    if (event) event.properties = { ...base, ...event.properties };
+    return event;
+  };
+  const appBeforeSend = options?.before_send ?? [];
+  client = new PostHog(apiKey, {
+    host,
+    ...options,
+    before_send: [addBase, ...(Array.isArray(appBeforeSend) ? appBeforeSend : [appBeforeSend])],
+  });
+  void client.register(base);
 }
 
 /** Sends an event, e.g. `capture('task_saved', { count: 3 })`. */
