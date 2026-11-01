@@ -1,5 +1,11 @@
 # @expo-kit/analytics
 
+## 58.1.1
+
+### Patch Changes
+
+- bee9747: Events sent right after `initAnalytics`, like PostHog's own app lifecycle events, now also carry `app`, `app_version`, `environment` and `platform`.
+
 ## 58.1.0
 
 ### Minor Changes
