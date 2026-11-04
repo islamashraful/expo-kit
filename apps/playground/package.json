@@ -11,6 +11,7 @@
     "@expo-kit/notifications": "workspace:*",
     "@expo-kit/purchases": "workspace:*",
     "@expo-kit/rating": "workspace:*",
+    "@expo-kit/swiftdata": "workspace:*",
     "@expo/ui": "~58.0.26",
     "expo": "~58.0.22",
     "expo-application": "~58.1.2",

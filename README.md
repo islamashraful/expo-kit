@@ -16,6 +16,7 @@ Versions match the Expo SDK: 58.x is for Expo SDK 58. On SDK 57, use 0.1.x (for 
 | [`@expo-kit/analytics`](packages/analytics) | [![npm](https://img.shields.io/npm/v/@expo-kit/analytics)](https://www.npmjs.com/package/@expo-kit/analytics) | PostHog events and screen views |
 | [`@expo-kit/purchases`](packages/purchases) | [![npm](https://img.shields.io/npm/v/@expo-kit/purchases)](https://www.npmjs.com/package/@expo-kit/purchases) | RevenueCat pro status, plans and paywall logic |
 | [`@expo-kit/cloudkit`](packages/cloudkit) | [![npm](https://img.shields.io/npm/v/@expo-kit/cloudkit)](https://www.npmjs.com/package/@expo-kit/cloudkit) | Typed iCloud sync with CKSyncEngine (native Swift) |
+| [`@expo-kit/swiftdata`](packages/swiftdata) | [![npm](https://img.shields.io/npm/v/@expo-kit/swiftdata)](https://www.npmjs.com/package/@expo-kit/swiftdata) | iCloud backup and sync with SwiftData, Apple handles the syncing |
 
 Open a package from the table for its install steps and guide.
 

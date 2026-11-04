@@ -46,6 +46,7 @@
           ]
         }
       ],
+      "@expo-kit/swiftdata",
       "expo-font",
       "expo-status-bar"
     ],
