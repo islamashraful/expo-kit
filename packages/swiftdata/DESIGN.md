@@ -177,8 +177,21 @@ it. No Key-Value Storage entitlement.
 1. [x] Spike (branch `spike/swiftdata`, kept for reference, never merged).
 2. [x] Package, tests, playground screen (PR #20). `"private": true`, so merging publishes nothing.
 3. [ ] TestFlight test on **two real devices** (iPhone + iPad, same Apple ID): live push while the app is open,
-   and the whole flow in the production environment. Before uploading: deploy the schema to production in the
-   CloudKit Console (container `iCloud.com.ashislam.expokit.playground`).
+   and the whole flow in the production environment.
+   - [x] EAS set up (branch `testflight`): project `@rxjuedu/playground`, profile `testflight` in
+     `apps/playground/eas.json` (store build, build number counts up, auto-submit). App Store Connect name
+     "expo-kit playground". Apple credentials are stored on EAS.
+   - [x] First build started on 2026-11-04 (build 1, `--auto-submit`):
+     https://expo.dev/accounts/rxjuedu/projects/playground/builds/6b9d043d-f83d-4df3-a57a-1ba5ace948ce
+   - [ ] Check that build 1 reached TestFlight (`cd apps/playground && npx eas-cli@latest submit:list -p ios`, or
+     App Store Connect → expo-kit playground → TestFlight). Add yourself as an internal tester there.
+   - [ ] CloudKit Console (icloud.developer.apple.com): container `iCloud.com.ashislam.expokit.playground` →
+     deploy the development schema to production. Without it, the TestFlight build can't sync.
+   - [ ] Install from TestFlight on both devices, then test: live push (device A changes, device B shows it
+     with the app open, untouched), fresh install restore, sign-out and sign-in. The build has no Metro: use
+     "Share report" for results.
+   - Next builds: `cd apps/playground && npx eas-cli@latest build -p ios --profile testflight --auto-submit`
+     (run it from `apps/playground`; from the repo root EAS creates a stray `eas.json` and fails).
 4. [ ] Release: remove `"private": true` from `package.json`, run `bun run release` once by hand (npm login),
    then add the npm trusted publisher (CONTRIBUTING, "Releasing"). Later versions go through changesets.
 5. [ ] Use it in a real app (with `importOnce` if it has data already).
