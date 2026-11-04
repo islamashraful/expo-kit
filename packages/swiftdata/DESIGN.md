@@ -172,6 +172,20 @@ it. No Key-Value Storage entitlement.
   need a one-time import from their own database into this store (see "Moving existing data in"); its iCloud
   data doesn't carry over.
 
+## Next steps
+
+1. [x] Spike (branch `spike/swiftdata`, kept for reference, never merged).
+2. [x] Package, tests, playground screen (PR #20). `"private": true`, so merging publishes nothing.
+3. [ ] TestFlight test on **two real devices** (iPhone + iPad, same Apple ID): live push while the app is open,
+   and the whole flow in the production environment. Before uploading: deploy the schema to production in the
+   CloudKit Console (container `iCloud.com.ashislam.expokit.playground`).
+4. [ ] Release: remove `"private": true` from `package.json`, run `bun run release` once by hand (npm login),
+   then add the npm trusted publisher (CONTRIBUTING, "Releasing"). Later versions go through changesets.
+5. [ ] Use it in a real app (with `importOnce` if it has data already).
+6. [ ] Retire `@expo-kit/cloudkit` (see Decisions).
+
+How to run the tests on devices: CONTRIBUTING, "Testing swiftdata on devices".
+
 ## Open points
 
 1. Live push: test with two real devices on a TestFlight build.

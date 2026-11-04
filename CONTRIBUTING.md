@@ -21,6 +21,30 @@ The playground reads package source directly, so edits show up without rebuildin
 
 The playground's "cloudkit" screen is a small notes app that syncs, but only in a signed development build: `com.ashislam.expokit.playground`, container `iCloud.com.ashislam.expokit.playground`.
 
+## Testing swiftdata on devices
+
+The playground's "swiftdata" screen is built for testing without screenshots: every step runs from a link, and every device prints what happens to Metro (lines start with `[swiftdata <device>]`).
+
+```sh
+bun run playground                  # Metro; keep it running, the logs show up here
+cd apps/playground && npx expo prebuild -p ios
+
+# Build and install on an iPhone (needs the Apple account in Xcode → Settings → Accounts).
+# -allowProvisioningUpdates lets Xcode create the profile; `expo run:ios` doesn't, and fails at signing.
+xcodebuild -workspace ios/playground.xcworkspace -scheme playground -configuration Debug \
+  -destination id=<device UDID> -derivedDataPath ios/build -allowProvisioningUpdates build
+xcrun devicectl device install app --device <UDID> ios/build/Build/Products/Debug-iphoneos/playground.app
+```
+
+- Device UDIDs: `xcrun devicectl list devices` (iPhone) and `xcrun simctl list devices booted` (simulator). Simulator builds use `Debug-iphonesimulator`.
+- Run a step on an iPhone over the cable (the phone must be unlocked; it also works in airplane mode):
+  `xcrun devicectl device process launch --device <UDID> --payload-url "playground://swiftdata?action=add&id=<new value>" com.ashislam.expokit.playground`
+- On the simulator: `xcrun simctl openurl <UDID> "playground://swiftdata?action=add&id=<new value>"`, then confirm "Open".
+- Actions: `add`, `add100`, `shared` (same key everywhere, for conflicts), `dup` (a new fixed key per day, for duplicates), `clear`, `report` (state and history as plain text, printed to Metro). `id` must change every time, or the link counts as already handled.
+- Bring the app to the front (this triggers a sync): launch another app (`com.apple.Preferences`), then the playground again. Launching it while it's already in front does nothing.
+- An iPhone that was offline loses its Metro connection; restart the app with `--terminate-existing` to reconnect.
+- A fresh-install test: `xcrun simctl uninstall`, then install again.
+
 ## Releasing
 
 1. After changing a package, run `bun run changeset`. Pick the packages, the kind of change (patch = fix, minor = new feature; major only for a new Expo SDK, see Versions) and write one line about it. Commit the file it creates and push.
