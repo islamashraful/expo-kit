@@ -16,7 +16,8 @@
   "submit": {
     "testflight": {
       "ios": {
-        "appName": "expo-kit playground"
+        "appName": "expo-kit playground",
+        "ascAppId": "6830713274"
       }
     }
   }

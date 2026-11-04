@@ -20,6 +20,8 @@ Versions match the Expo SDK: 58.x is for Expo SDK 58. On SDK 57, use 0.1.x (for 
 
 Open a package from the table for its install steps and guide.
 
+Planned: `@expo-kit/apple-ai`, a native Swift module.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

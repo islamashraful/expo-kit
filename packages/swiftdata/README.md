@@ -130,30 +130,21 @@ await importOnce('from-sqlite-v1', async () => {
 - **Conflicts:** when the same item is changed on two devices, the change that reaches iCloud last wins. A device that was offline can overwrite a newer change from another device when it comes back online. This is Apple's behaviour and can't be changed.
 - **Duplicates:** two offline devices that create the same key both keep their copy. You never see two: reads return the newest, and the older copy is removed after the next download.
 - **Signing out** of iCloud removes this data from the device; signing in brings it back. While signed out, new data saves on the device and uploads to whichever account signs in next, which could be a different Apple ID.
-- **When:** changes from other devices arrive when the app launches or comes to the front. Live updates while the app is open depend on Apple's pushes and aren't guaranteed.
+- **When:** changes from other devices arrive when the app launches or comes to the front. While the app is open, Apple's pushes usually bring them in about a second, but Apple doesn't guarantee pushes.
 - **Size:** items are read per collection, so it's meant for settings, lists and notes (up to a few thousand items per collection), not large data you search through. Large items (over about 1 MB) are stored as iCloud files automatically.
 
 ## Release checklist
 
 - In the [CloudKit Console](https://icloud.developer.apple.com), deploy the schema to production before the App Store release, once per app. In development, the record type (`CD_StoredItem`) is created automatically on first save.
+- If items can be large (over about 1 MB), save one large item in a development build first, so the field for large items (`CD_payload_ckAsset`) exists when you deploy. Otherwise large items won't sync in production. You can deploy again later; fields can be added, never removed.
 
 ## What's tested
 
-On a real iPhone and a simulator (iOS 27, Xcode 27, Expo SDK 58), development environment:
+- On real devices with TestFlight (production environment): live updates while the app is open (about 1 s), fresh install restore, signing out and back in, and items up to 2 MB.
+- In development: offline edits and duplicates, `importOnce` on two devices, and the restore after a fresh install.
+- Automated tests: the Swift store (newest copy, duplicates, cleanup), the status (restoring, sign-out, errors), versions, migrations, schema checks, `importOnce`, and the config plugin.
 
-- Save and upload (a note in under 1 s; 1,000 items in about 8 s in an earlier spike)
-- Fresh install: `restoring` until the download finished (about 6 s), then the data is there
-- `importOnce`: waits for the restore, runs once per device; two devices importing the same rows end up with one copy each
-- A change from another device arrives when the app comes to the front (about 2 s)
-- One device offline: duplicates of a new key show as one item on both devices; the same item edited on both ends the same on both (last upload wins)
-- Signing out of iCloud and back in (in the spike: data removed on sign-out, restored on sign-in)
-
-Automated tests: the Swift store (newest copy, duplicates, cleanup), the status (restoring, sign-out, errors), versions, migrations, schema checks, `importOnce`, and the config plugin.
-
-Not tested yet:
-
-- Live push: a change showing up on another device while the app is open
-- The production environment (TestFlight, App Store)
+Times, devices and exact results: [DESIGN.md](DESIGN.md#test-results).
 
 ## License
 

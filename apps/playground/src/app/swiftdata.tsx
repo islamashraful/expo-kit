@@ -9,6 +9,7 @@ import { buildReport, runAction, store, type Action } from '../cloud/swiftdata-n
 const BUTTONS: { action: Action; label: string }[] = [
   { action: 'add', label: 'Add note' },
   { action: 'add100', label: 'Add 100 notes' },
+  { action: 'big', label: 'Add 2 MB note' },
   { action: 'shared', label: 'Edit shared note' },
   { action: 'dup', label: 'Create duplicate-test note' },
   { action: 'clear', label: 'Delete all notes' },

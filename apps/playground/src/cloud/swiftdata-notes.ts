@@ -4,11 +4,11 @@ import * as Device from 'expo-device';
 // Test setup for @expo-kit/swiftdata: a notes collection, plus a plain-text history of everything the store
 // reports, printed to Metro (so it shows up on the Mac) and included in the report.
 
-export type SimpleNote = { title: string; by: string; at: string };
+export type SimpleNote = { title: string; by: string; at: string; body?: string };
 
 export const store = defineStore({ notes: collection<SimpleNote>() });
 
-export const deviceName = `${Device.isDevice ? 'iPhone' : 'Simulator'} ${Device.modelName ?? ''}`.trim();
+export const deviceName = `${Device.isDevice ? 'Device' : 'Simulator'} ${Device.modelName ?? ''}`.trim();
 
 const startedAt = Date.now();
 const history: string[] = [];
@@ -52,7 +52,7 @@ void importOnce('playground-old-notes-v1', () =>
   ),
 ).then((ran) => log(ran ? 'import: moved 3 old notes' : 'import: done before'));
 
-export type Action = 'add' | 'add100' | 'shared' | 'dup' | 'clear' | 'report';
+export type Action = 'add' | 'add100' | 'big' | 'shared' | 'dup' | 'clear' | 'report';
 
 /** Every test step. Also reachable as playground://swiftdata?action=<name>, so it can be run without tapping. */
 export async function runAction(action: Action): Promise<string> {
@@ -66,6 +66,10 @@ export async function runAction(action: Action): Promise<string> {
       await store.notes.setMany(
         Array.from({ length: 100 }, (_, i) => ({ key: `bulk-${i}`, value: value(`Bulk note ${i}`) })),
       );
+      break;
+    case 'big':
+      // Over CloudKit's 1 MB record limit, so it syncs as an asset (CD_payload_ckAsset).
+      await store.notes.set(`big-${Date.now().toString(36)}`, { ...value('Big note (2 MB)'), body: 'x'.repeat(2_000_000) });
       break;
     case 'shared':
       // The same key on every device: for conflicts (edit on two devices, one offline).
@@ -93,7 +97,12 @@ export async function buildReport(): Promise<string> {
     `=== swiftdata report · ${deviceName} · ${new Date().toISOString()} ===`,
     `status: ${describe(getCloudStatus())}`,
     `notes: ${entries.length}`,
-    ...entries.slice(0, 15).map((e) => `  ${e.key} · "${e.value.title}" · by ${e.value.by} · edited ${e.updatedAt.toISOString()}`),
+    ...entries
+      .slice(0, 15)
+      .map(
+        (e) =>
+          `  ${e.key} · "${e.value.title}"${e.value.body ? ` · body ${e.value.body.length} chars` : ''} · by ${e.value.by} · edited ${e.updatedAt.toISOString()}`,
+      ),
     entries.length > 15 ? `  … ${entries.length - 15} more` : null,
     'history:',
     ...history.slice(-60).map((line) => `  ${line}`),
