@@ -10,7 +10,14 @@
     "ios": {
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "com.ashislam.expokit.playground",
-      "appleTeamId": "KD9VY8RBBA"
+      "appleTeamId": "KD9VY8RBBA",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleDisplayName": "expo-kit playground",
+        "CFBundleName": "expo-kit playground"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -46,12 +53,19 @@
           ]
         }
       ],
+      "@expo-kit/swiftdata",
       "expo-font",
       "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3f3aca5a-e826-45c9-88a6-b4e51f02e92e"
+      }
+    },
+    "owner": "rxjuedu"
   }
 }

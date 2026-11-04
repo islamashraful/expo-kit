@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "version": ">= 27.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "testflight": {
+      "distribution": "store",
+      "autoIncrement": true,
+      "bun": "1.4.2",
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    }
+  },
+  "submit": {
+    "testflight": {
+      "ios": {
+        "appName": "expo-kit playground",
+        "ascAppId": "6830713274"
+      }
+    }
+  }
+}
