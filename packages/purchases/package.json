@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
-    "expo-router": "~58.0.29",
+    "expo-router": "~58.0.31",
     "react-native-purchases": "^10.13.0",
     "typescript": "~6.0.3"
   },
